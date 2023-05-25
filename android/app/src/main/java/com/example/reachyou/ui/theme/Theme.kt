@@ -64,7 +64,7 @@ fun ReachYouTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = latoTypography,
         content = content
     )
 }
