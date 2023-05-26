@@ -1,4 +1,4 @@
-package com.example.reachyou.ui.screen.login
+package com.example.reachyou.ui.screen.register
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -20,7 +19,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -33,34 +31,34 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import com.example.reachyou.R
-import com.example.reachyou.ui.component.ActionButton
-import com.example.reachyou.ui.component.TransparentButton
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.dp
+import com.example.reachyou.R
+import com.example.reachyou.ui.component.ActionButton
 import com.example.reachyou.ui.component.EmailTextField
 import com.example.reachyou.ui.component.PasswordTextField
-import com.example.reachyou.ui.screen.landing.LandingScreen
+import com.example.reachyou.ui.screen.login.LoginScreen
 import com.example.reachyou.ui.theme.ReachYouTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(
+fun RegisterScreen(
     modifier: Modifier = Modifier
 ) {
     var email by rememberSaveable {
         mutableStateOf("")
     }
     var password by rememberSaveable {
+        mutableStateOf("")
+    }
+
+    var reTypePassword by rememberSaveable {
         mutableStateOf("")
     }
     Column(
@@ -81,7 +79,7 @@ fun LoginScreen(
             id = R.drawable.logo),
             contentDescription = "ReachYou Logo", modifier = Modifier.size(300.dp))
         Text(
-            text = "Login",
+            text = "Register",
             style = MaterialTheme.typography.titleLarge,
             color = Color.White.copy(alpha = 0.72f)
         )
@@ -90,14 +88,21 @@ fun LoginScreen(
             input = email,
             onValueChange = {email = it},
             label = "Email")
-        PasswordTextField(input = password, onValueChange = {password = it}, label = "Password")
-        ActionButton(text = "Login", onClick = {})
+        PasswordTextField(input = password, onValueChange = { password = it }, label = "Password")
+        PasswordTextField(
+            input = reTypePassword,
+            onValueChange = { reTypePassword = it },
+            label = "Re-Type Password"
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        ActionButton(text = "Register", onClick = {})
     }
 }
+
 @Preview(showBackground = true, device = Devices.PIXEL_4, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun TransparentButtonPreview() {
+fun RegisterScreenPreview() {
     ReachYouTheme {
-        LoginScreen()
+        RegisterScreen()
     }
 }
