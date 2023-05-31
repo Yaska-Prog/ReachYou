@@ -31,6 +31,11 @@ val latoTypography = Typography(
         fontFamily = Lato,
         fontWeight = FontWeight.W300,
         fontSize = 15.sp
+    ),
+    displaySmall = TextStyle(
+        fontFamily = Lato,
+        fontWeight = FontWeight.W600,
+        fontSize = 12.sp
     )
 )
 

@@ -27,7 +27,9 @@ import com.example.reachyou.ui.theme.ReachYouTheme
 
 @Composable
 fun LandingScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToLogin: () -> Unit,
+    navigateToRegister: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -47,8 +49,8 @@ fun LandingScreen(
             id = R.drawable.logo),
             contentDescription = "ReachYou Logo", modifier = Modifier.size(300.dp))
         Spacer(modifier = modifier.height(50.dp))
-        ActionButton(text = "Login", onClick = {})
-        TransparentButton(onClick = {})
+        ActionButton(text = "Login", onClick = navigateToLogin)
+        TransparentButton(onClick = navigateToRegister)
     }
 }
 
@@ -56,6 +58,6 @@ fun LandingScreen(
 @Composable
 fun TransparentButtonPreview() {
     ReachYouTheme {
-        LandingScreen()
+//        LandingScreen()
     }
 }
