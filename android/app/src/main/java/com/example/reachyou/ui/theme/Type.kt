@@ -19,7 +19,7 @@ private val Lato = FontFamily(
 val latoTypography = Typography(
     titleLarge = TextStyle(
         fontFamily = Lato,
-        fontWeight = FontWeight.W600,
+        fontWeight = FontWeight.W900,
         fontSize = 30.sp
     ),
     headlineMedium = TextStyle(
@@ -36,6 +36,16 @@ val latoTypography = Typography(
         fontFamily = Lato,
         fontWeight = FontWeight.W600,
         fontSize = 12.sp
+    ),
+    labelSmall = TextStyle(
+        fontFamily = Lato,
+        fontWeight = FontWeight.W400,
+        fontSize = 10.sp
+    ),
+    displayMedium = TextStyle(
+        fontFamily = Lato,
+        fontWeight = FontWeight.W100,
+        fontSize = 15.sp
     )
 )
 

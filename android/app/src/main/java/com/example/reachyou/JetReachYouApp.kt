@@ -40,6 +40,7 @@ fun JetReachYouApp(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     Scaffold(
+        topBar = {},
         bottomBar ={
             if(currentRoute != Screen.Landing.route ||
                 currentRoute != Screen.Login.route ||

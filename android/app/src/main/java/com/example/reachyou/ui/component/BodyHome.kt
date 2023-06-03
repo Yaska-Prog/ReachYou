@@ -61,12 +61,15 @@ fun ItemHomeUI(
     modifier: Modifier = Modifier
 ) {
     Card(
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
         modifier = modifier
             .padding(10.dp)
             .background(color = Color.White),
     ) {
-        Row(modifier = modifier.padding(5.dp)) {
+        Row(modifier = modifier.padding(top = 15.dp, bottom = 15.dp)) {
            Icon(imageVector = icon, contentDescription = headline, tint = Color.Unspecified)
            Column {
                Text(text = headline, style = MaterialTheme.typography.headlineMedium)

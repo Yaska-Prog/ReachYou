@@ -64,11 +64,7 @@ fun TopHomeBar(
                 )
                 Column {
                     Text(text = "Selamat datang, $username", style = MaterialTheme.typography.titleLarge, color = Color.White)
-                    Row(modifier = modifier.clip(RoundedCornerShape(20.dp))){
-                        Icon(imageVector = ImageVector.vectorResource(id = R.drawable.coin_icon), contentDescription = "Coin Icon", tint = Color.Unspecified)
-                        Spacer(modifier = modifier.width(2.dp))
-                        Text(text = "60", style = MaterialTheme.typography.displaySmall, color = Color.White)
-                    }
+                    CoinStatus(coin = "70")
                     Spacer(modifier = modifier.height(15.dp))
                     Text(text = "Selamat Pagi", style = MaterialTheme.typography.titleLarge, color = Color.White)
                     Text(
