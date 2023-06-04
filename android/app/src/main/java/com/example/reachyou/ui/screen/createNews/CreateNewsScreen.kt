@@ -1,5 +1,4 @@
-package com.example.reachyou.ui.screen.laporBug
-
+package com.example.reachyou.ui.screen.createNews
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -27,7 +26,7 @@ import com.example.reachyou.ui.component.InputBox
 import com.example.reachyou.ui.component.UploadBox
 
 @Composable
-fun LaporBugScreen(
+fun CreateNewsScreen(
     modifier: Modifier = Modifier
 ) {
     var selectedImageByUri by remember {
@@ -37,33 +36,32 @@ fun LaporBugScreen(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri -> selectedImageByUri = uri }
     )
-    var subject by rememberSaveable{
+    var headline by rememberSaveable{
         mutableStateOf("")
     }
-    var detail by rememberSaveable{
+    var content by rememberSaveable{
         mutableStateOf("")
     }
-
     Column {
         BackButton()
-        Text(text = "Laporkan Bug", style = MaterialTheme.typography.titleLarge, modifier = modifier.padding(15.dp))
-        Text(text = "Bantu kami untuk menjadi  lebih bermanfaat dengan cara melaporkan bug atau kendala yang anda alami!", style = MaterialTheme.typography.bodyMedium, modifier = modifier.padding(start = 15.dp, end = 15.dp))
+        Text(text = "Tulis beritamu sendiri!", style = MaterialTheme.typography.titleLarge, modifier = modifier.padding(15.dp))
+        Text(text = "Tolong jangan menuliskan berita yang mengandung SARA", style = MaterialTheme.typography.bodyMedium, modifier = modifier.padding(start = 15.dp, end = 15.dp))
         UploadBox(selectedImageByUri = selectedImageByUri, onClick = {
             photoLauncher.launch(
-                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
+                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
             )
         })
         InputBox(
-            title = "Subject(Inti Permasalahan)",
-            subtitle = "Jelaskan kendala yang kamu alami",
-            input = subject,
-            onValueChange = { subject = it }
+            title = "Headline berita",
+            subtitle = "Tuliskan judul dari berita yang akan kamu angkat",
+            input = headline,
+            onValueChange = { headline = it }
         )
         InputBox(
-            title = "Detail Masalah",
-            subtitle = "Jelaskan kendala yang kamu alami secara lebih mendalama",
-            input = detail,
-            onValueChange = { detail = it }
+            title = "Isi berita",
+            subtitle = "Jelaskan secara detail apa saja yang akan menjadi inti berita...",
+            input = content,
+            onValueChange = { content = it }
         )
         Spacer(modifier = modifier.height(20.dp))
         ActionButton(text = "Laporkan!") {
@@ -76,6 +74,6 @@ fun LaporBugScreen(
 @Composable
 fun LaporBugScreenPreview() {
     ReachYouTheme {
-        LaporBugScreen()
+        CreateNewsScreen()
     }
 }
