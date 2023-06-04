@@ -28,7 +28,8 @@ import com.example.reachyou.ui.theme.ReachYouTheme
 
 @Composable
 fun NewsScreen(
-    modifier: Modifier =  Modifier
+    modifier: Modifier =  Modifier,
+    navigateToCreate: () -> Unit
 ) {
     val list = listOf(1, 2, 3, 4, 5)
 
@@ -47,7 +48,7 @@ fun NewsScreen(
     }
     Box(modifier = Modifier.fillMaxSize()){
         FloatingActionButton(
-            onClick = { /*TODO*/ },
+            onClick = navigateToCreate,
             modifier = Modifier.padding(bottom = 50.dp, end = 15.dp)
                 .align(alignment = Alignment.BottomEnd)
         ) {
@@ -63,6 +64,6 @@ fun NewsScreen(
 @Composable
 fun NewsScreenPreview() {
     ReachYouTheme {
-        NewsScreen()
+//        NewsScreen(na)
     }
 }
