@@ -1,0 +1,27 @@
+package com.example.reachyou.ui.screen.login
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.reachyou.data.repository.AuthRepository
+import com.example.reachyou.ui.utils.UiState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.launch
+
+class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
+
+    private val _uiState = MutableStateFlow<UiState<String>>(UiState.Idle)
+    val uiState: StateFlow<UiState<String>> = _uiState
+
+    fun login(email: String, password: String) {
+        viewModelScope.launch{
+            authRepository.login(email, password)
+                .onStart { _uiState.value = UiState.Loading }
+                .collect{ result -> _uiState.value = result}
+        }
+    }
+}

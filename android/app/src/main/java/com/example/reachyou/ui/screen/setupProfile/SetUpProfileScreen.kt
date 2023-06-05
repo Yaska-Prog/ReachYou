@@ -107,7 +107,7 @@ fun SetupProfileScreen(
             )
         )
         Spacer(modifier = Modifier.height(32.dp))
-        ActionButton(text = "Continue", onClick = {})
+        ActionButton(text = "Continue", onClick = {}, isLoading = false)
     }
 }
 @Preview(showBackground = true, device = Devices.PIXEL_4, uiMode = Configuration.UI_MODE_NIGHT_YES)

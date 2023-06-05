@@ -59,7 +59,7 @@ fun JetReachYouApp(
     ) {innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.Home.route,
+            startDestination = Screen.Landing.route,
             modifier = Modifier.padding(innerPadding)){
             composable(Screen.Landing.route){
                 LandingScreen(modifier = Modifier,
@@ -67,7 +67,10 @@ fun JetReachYouApp(
                     navigateToRegister = {navController.navigate(Screen.Register.route)})
             }
             composable(Screen.Login.route){
-                LoginScreen()
+                LoginScreen(
+                    navigateToRegister = {navController.navigate(Screen.Register.route)},
+                    navigateToHome = {navController.navigate(Screen.Home.route)}
+                )
             }
             composable(Screen.Register.route){
                 RegisterScreen()

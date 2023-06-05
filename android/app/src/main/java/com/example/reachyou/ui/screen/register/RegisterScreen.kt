@@ -95,7 +95,7 @@ fun RegisterScreen(
             label = "Re-Type Password"
         )
         Spacer(modifier = Modifier.height(24.dp))
-        ActionButton(text = "Register", onClick = {})
+        ActionButton(text = "Register", onClick = {}, isLoading = false)
     }
 }
 

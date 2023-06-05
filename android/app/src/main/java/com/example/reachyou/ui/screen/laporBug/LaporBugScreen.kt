@@ -66,9 +66,7 @@ fun LaporBugScreen(
             onValueChange = { detail = it }
         )
         Spacer(modifier = modifier.height(20.dp))
-        ActionButton(text = "Laporkan!") {
-
-        }
+        ActionButton(text = "Laporkan!", onClick = {}, isLoading = false)
     }
 }
 

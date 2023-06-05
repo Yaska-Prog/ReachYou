@@ -64,9 +64,7 @@ fun CreateNewsScreen(
             onValueChange = { content = it }
         )
         Spacer(modifier = modifier.height(20.dp))
-        ActionButton(text = "Laporkan!") {
-
-        }
+        ActionButton(text = "Laporkan!", onClick = {}, isLoading = false)
     }
 }
 

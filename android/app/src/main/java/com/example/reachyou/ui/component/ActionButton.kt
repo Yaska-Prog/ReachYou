@@ -4,8 +4,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +22,7 @@ fun ActionButton(
     text: String,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
+    isLoading: Boolean
 ) {
     Button(
         onClick = onClick,
@@ -33,16 +36,23 @@ fun ActionButton(
             contentColor = androidx.compose.ui.graphics.Color.Black
         )
     ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.headlineMedium
-        )
+        if(isLoading){
+            CircularProgressIndicator(
+                modifier = modifier.size(20.dp)
+            )
+        }
+        else{
+            Text(
+                text = text,
+                style = MaterialTheme.typography.headlineMedium
+            )
+        }
     }
 }
 @Preview(showBackground = true, device = Devices.PIXEL_4)
 @Composable
 fun ButtonLoginPreview() {
     ReachYouTheme {
-        ActionButton(text = "Login", modifier = Modifier, onClick = {})
+//        ActionButton(text = "Login", modifier = Modifier, onClick = {})
     }
 }

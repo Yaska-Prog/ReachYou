@@ -49,7 +49,7 @@ fun LandingScreen(
             id = R.drawable.logo),
             contentDescription = "ReachYou Logo", modifier = Modifier.size(300.dp))
         Spacer(modifier = modifier.height(50.dp))
-        ActionButton(text = "Login", onClick = navigateToLogin)
+        ActionButton(text = "Login", onClick = navigateToLogin, isLoading = false)
         TransparentButton(onClick = navigateToRegister)
     }
 }
