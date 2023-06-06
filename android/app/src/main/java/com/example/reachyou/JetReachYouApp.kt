@@ -38,6 +38,7 @@ import com.example.reachyou.ui.screen.login.LoginScreen
 import com.example.reachyou.ui.screen.news.NewsScreen
 import com.example.reachyou.ui.screen.profile.ProfileScreen
 import com.example.reachyou.ui.screen.register.RegisterScreen
+import com.example.reachyou.ui.screen.setupProfile.SetupProfileScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,7 +60,7 @@ fun JetReachYouApp(
     ) {innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.Landing.route,
+            startDestination = Screen.Login.route,
             modifier = Modifier.padding(innerPadding)){
             composable(Screen.Landing.route){
                 LandingScreen(modifier = Modifier,
@@ -73,7 +74,10 @@ fun JetReachYouApp(
                 )
             }
             composable(Screen.Register.route){
-                RegisterScreen()
+                RegisterScreen(
+                    navigateToLogin = {navController.navigate(Screen.Login.route)},
+                    navigateToSetupProfile = {navController.navigate(Screen.SetupProfile.route)}
+                )
             }
             composable(Screen.Home.route){
                 HomeScreen()
@@ -84,9 +88,15 @@ fun JetReachYouApp(
             composable(Screen.CreateNews.route){
                 CreateNewsScreen()
             }
+            composable(Screen.SetupProfile.route){
+                SetupProfileScreen(
+                    navigateToLogin = {navController.navigate(Screen.Login.route)}
+                )
+            }
             composable(Screen.News.route){
                 NewsScreen(navigateToCreate = {navController.navigate(Screen.CreateNews.route)})
             }
+
         }
     }
 }

@@ -9,14 +9,19 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,17 +36,17 @@ import com.example.reachyou.R
 import com.example.reachyou.ui.component.ActionButton
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.reachyou.data.local.SharedPreferenceManager
+import com.example.reachyou.model.UserModel
 import com.example.reachyou.ui.utils.ViewModelFactory
 import com.example.reachyou.ui.component.EmailTextField
 import com.example.reachyou.ui.component.MessageBox
 import com.example.reachyou.ui.component.PasswordTextField
 import com.example.reachyou.ui.theme.ReachYouTheme
 import com.example.reachyou.ui.utils.UiState
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,13 +55,14 @@ fun LoginScreen(
     navigateToHome: () -> Unit,
     navigateToRegister: () -> Unit,
     viewModel: LoginViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = ViewModelFactory.getUserInstance(
-        LocalContext.current))
+        LocalContext.current)),
+    sharedPreferenceManager: SharedPreferenceManager = SharedPreferenceManager(LocalContext.current)
 ) {
-    var email by rememberSaveable {
-        mutableStateOf("Yaska")
+    var username by rememberSaveable {
+        mutableStateOf("")
     }
     var password by rememberSaveable {
-        mutableStateOf("Yaska123")
+        mutableStateOf("")
     }
     var isLoading by rememberSaveable {
         mutableStateOf(false)
@@ -107,13 +113,33 @@ fun LoginScreen(
             color = Color.White.copy(alpha = 0.72f)
         )
         Spacer(modifier = modifier.height(50.dp))
-        EmailTextField(
-            input = email,
-            onValueChange = {email = it},
-            label = "Email")
+        TextField(
+            value = username,
+            onValueChange = {username = it},
+            shape = RoundedCornerShape(19.dp),
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = Color.White,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                containerColor = Color.White.copy(0.2f)
+            ),
+            label = {
+                Text(text = "Username",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White
+                )
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text
+            )
+        )
         PasswordTextField(input = password, onValueChange = {password = it}, label = "Password")
         ActionButton(text = "Login", onClick = {
-            viewModel.login(email, password)
+            viewModel.login(username, password)
         }, isLoading = isLoading)
         Text(
             text = "Belum memiliki akun? Daftarkan diri anda disini!",
@@ -127,7 +153,12 @@ fun LoginScreen(
             is UiState.Success -> {
                 isLoading = false
                 isSuccessMessagebox = true
-                message = (uiState as UiState.Success<String>).data
+                message = "Berhasil Login"
+
+                val user = (uiState as UiState.Success<UserModel>).data
+                sharedPreferenceManager.saveUser(user = user)
+                val shared = sharedPreferenceManager.getUser()
+                Log.d("User", shared!!.usernname)
             }
             is UiState.Error -> {
                 isLoading = false
