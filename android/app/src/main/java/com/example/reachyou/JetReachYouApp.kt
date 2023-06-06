@@ -38,12 +38,15 @@ import com.example.reachyou.ui.screen.login.LoginScreen
 import com.example.reachyou.ui.screen.news.NewsScreen
 import com.example.reachyou.ui.screen.profile.ProfileScreen
 import com.example.reachyou.ui.screen.register.RegisterScreen
+import com.example.reachyou.ui.screen.scannerBISINDO.ScannerBISINDOScreen
 import com.example.reachyou.ui.screen.setupProfile.SetupProfileScreen
+import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JetReachYouApp(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    outputDirectory: File
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -60,7 +63,7 @@ fun JetReachYouApp(
     ) {innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.Login.route,
+            startDestination = Screen.ScannerBISINDO.route,
             modifier = Modifier.padding(innerPadding)){
             composable(Screen.Landing.route){
                 LandingScreen(modifier = Modifier,
@@ -96,7 +99,9 @@ fun JetReachYouApp(
             composable(Screen.News.route){
                 NewsScreen(navigateToCreate = {navController.navigate(Screen.CreateNews.route)})
             }
-
+            composable(Screen.ScannerBISINDO.route){
+                ScannerBISINDOScreen(outputDirectory = outputDirectory, onError = {})
+            }
         }
     }
 }
