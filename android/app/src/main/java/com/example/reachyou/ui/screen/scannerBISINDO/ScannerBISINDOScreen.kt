@@ -10,10 +10,17 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -27,11 +34,14 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.vectorResource
@@ -56,10 +66,18 @@ import kotlin.coroutines.suspendCoroutine
 fun ScannerBISINDOScreen(
     modifier: Modifier = Modifier,
     outputDirectory: File,
-    onError: (ImageCaptureException) -> Unit
+    onError: (ImageCaptureException) -> Unit,
+    index: Int
 ) {
-
-    var lensFacing = CameraSelector.LENS_FACING_BACK
+    //0: BISINDO
+    //1: Warna
+    //2: Uang
+    //3: Objek
+    var currentIndex by rememberSaveable {
+        mutableStateOf(0)
+    }
+    val listIcon = listOf<Int>(R.drawable.scanner_bisindo, R.drawable.scanner_color, R.drawable.scanner_uang, R.drawable.scanner_objek)
+    val lensFacing = CameraSelector.LENS_FACING_BACK
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val preview = Preview.Builder().build()
@@ -77,6 +95,21 @@ fun ScannerBISINDOScreen(
             selectedImageByUri = null
         }
     }
+    var leftButtonIcon by rememberSaveable {
+        mutableStateOf<Int>(if(currentIndex >= 1) currentIndex-1 else 10)
+    }
+    var rightButtonIcon by rememberSaveable {
+        mutableStateOf<Int>(if(currentIndex < 3) currentIndex+1 else 10)
+    }
+    val leftButtonScale by animateFloatAsState(
+        targetValue = 0.8f,
+        animationSpec = tween(durationMillis = 300)
+    )
+
+    val rightButtonScale by animateFloatAsState(
+        targetValue = 0.8f,
+        animationSpec = tween(durationMillis = 300)
+    )
     if(selectedImageByUri == null){
         LaunchedEffect(lensFacing) {
             val cameraProvider = context.getCameraProvider()
@@ -91,7 +124,23 @@ fun ScannerBISINDOScreen(
             preview.setSurfaceProvider(previewView.surfaceProvider)
         }
 
-        Box(contentAlignment = Alignment.BottomCenter, modifier = Modifier.fillMaxSize()) {
+        Box(contentAlignment = Alignment.BottomCenter,
+            modifier = Modifier.fillMaxSize()
+                .pointerInput(Unit){
+                    detectDragGestures { change, dragAmount ->
+                        if(dragAmount.x < -350 && currentIndex <= 2){
+                            currentIndex += 1
+                            rightButtonIcon = if(currentIndex < 3) currentIndex + 1 else 10
+                            leftButtonIcon = if(currentIndex >= 1) currentIndex -1 else 10
+                        }
+                        if(dragAmount.x > 350 && currentIndex <= 3 && currentIndex > 0){
+                            currentIndex -= 1
+                            rightButtonIcon = if(currentIndex < 3) currentIndex + 1 else 10
+                            leftButtonIcon = if(currentIndex >= 1) currentIndex -1 else 10
+                        }
+                    }
+                }
+        ) {
             AndroidView({ previewView }, modifier = Modifier.fillMaxSize())
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopEnd){
                 IconButton(onClick = {
@@ -115,6 +164,44 @@ fun ScannerBISINDOScreen(
                     )
                 }
             }
+            if(rightButtonIcon != 10){
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd){
+                    IconButton(
+                        modifier = modifier
+                            .padding(20.dp)
+                            .size(70.dp)
+                            .scale(rightButtonScale),
+                        onClick = {
+                            currentIndex += 1
+                            rightButtonIcon = if(currentIndex < 3) currentIndex + 1 else 10
+                            leftButtonIcon = if(currentIndex >= 1) currentIndex -1 else 10
+                        }) {
+                        Icon( imageVector = ImageVector.vectorResource(id = listIcon[rightButtonIcon as Int]),
+                            contentDescription = "Right Buttton",
+                            tint = Color.Unspecified
+                        )
+                    }
+                }
+            }
+            if(leftButtonIcon != 10){
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomStart){
+                    IconButton(
+                        modifier = modifier
+                            .padding(20.dp)
+                            .size(70.dp)
+                            .scale(rightButtonScale),
+                        onClick = {
+                            currentIndex -= 1
+                            rightButtonIcon = if(currentIndex < 3) currentIndex + 1 else 10
+                            leftButtonIcon = if(currentIndex >= 1) currentIndex -1 else 10
+                        }) {
+                        Icon( imageVector = ImageVector.vectorResource(id = listIcon[leftButtonIcon as Int]),
+                            contentDescription = "Right Buttton",
+                            tint = Color.Unspecified
+                        )
+                    }
+                }
+            }
             IconButton(
                 modifier = Modifier
                     .padding(bottom = 20.dp)
@@ -133,7 +220,7 @@ fun ScannerBISINDOScreen(
                 },
                 content = {
                     Icon(
-                        imageVector = ImageVector.vectorResource(id = R.drawable.scanner_bisindo),
+                        imageVector = ImageVector.vectorResource(id = listIcon[currentIndex]),
                         contentDescription = "Take picture",
                         tint = Color.Unspecified,
                         modifier = Modifier

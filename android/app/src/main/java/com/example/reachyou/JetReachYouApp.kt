@@ -100,7 +100,7 @@ fun JetReachYouApp(
                 NewsScreen(navigateToCreate = {navController.navigate(Screen.CreateNews.route)})
             }
             composable(Screen.ScannerBISINDO.route){
-                ScannerBISINDOScreen(outputDirectory = outputDirectory, onError = {})
+                ScannerBISINDOScreen(outputDirectory = outputDirectory, onError = {}, index = 0)
             }
         }
     }
