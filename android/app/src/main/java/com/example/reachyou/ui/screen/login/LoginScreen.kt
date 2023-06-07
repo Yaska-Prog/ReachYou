@@ -1,7 +1,6 @@
 package com.example.reachyou.ui.screen.login
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -33,7 +31,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.reachyou.R
-import com.example.reachyou.ui.component.ActionButton
+import com.example.reachyou.ui.component.button.ActionButton
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
@@ -42,9 +40,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.reachyou.data.local.SharedPreferenceManager
 import com.example.reachyou.model.UserModel
 import com.example.reachyou.ui.utils.ViewModelFactory
-import com.example.reachyou.ui.component.EmailTextField
-import com.example.reachyou.ui.component.MessageBox
-import com.example.reachyou.ui.component.PasswordTextField
+import com.example.reachyou.ui.component.utils.MessageBox
+import com.example.reachyou.ui.component.textfield.PasswordTextField
 import com.example.reachyou.ui.theme.ReachYouTheme
 import com.example.reachyou.ui.utils.UiState
 

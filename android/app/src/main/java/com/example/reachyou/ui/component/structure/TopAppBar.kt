@@ -1,4 +1,4 @@
-package com.example.reachyou.ui.component
+package com.example.reachyou.ui.component.structure
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box

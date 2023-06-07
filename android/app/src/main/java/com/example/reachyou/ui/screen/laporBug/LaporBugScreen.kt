@@ -20,11 +20,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.reachyou.ui.component.ActionButton
-import com.example.reachyou.ui.component.BackButton
+import com.example.reachyou.ui.component.button.ActionButton
+import com.example.reachyou.ui.component.button.BackButton
 import com.example.reachyou.ui.theme.ReachYouTheme
-import com.example.reachyou.ui.component.InputBox
-import com.example.reachyou.ui.component.UploadBox
+import com.example.reachyou.ui.component.inputBox.InputBox
+import com.example.reachyou.ui.component.inputBox.UploadBox
 
 @Composable
 fun LaporBugScreen(

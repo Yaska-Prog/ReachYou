@@ -1,4 +1,4 @@
-package com.example.reachyou.ui.component
+package com.example.reachyou.ui.component.button
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

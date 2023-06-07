@@ -1,4 +1,4 @@
-package com.example.reachyou.ui.component
+package com.example.reachyou.ui.component.utils
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

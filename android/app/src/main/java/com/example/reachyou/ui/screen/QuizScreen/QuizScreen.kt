@@ -4,8 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.reachyou.ui.component.ItemQuiz
-import com.example.reachyou.ui.component.TopAppBar
+import com.example.reachyou.ui.component.item.ItemQuiz
+import com.example.reachyou.ui.component.structure.TopAppBar
 
 @Composable
 fun QuizScreen(

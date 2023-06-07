@@ -1,4 +1,4 @@
-package com.example.reachyou.ui.component
+package com.example.reachyou.ui.component.button
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton

@@ -1,4 +1,4 @@
-package com.example.reachyou.ui.component
+package com.example.reachyou.ui.component.structure
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import com.example.reachyou.R
 import com.example.reachyou.model.ItemHome
 import com.example.reachyou.ui.theme.ReachYouTheme
-import java.io.File
 
 @Composable
 fun BodyHome(

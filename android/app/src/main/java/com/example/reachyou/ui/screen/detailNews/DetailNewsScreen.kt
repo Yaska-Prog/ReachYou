@@ -27,7 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.reachyou.ui.component.BackButton
+import com.example.reachyou.ui.component.button.BackButton
 import com.example.reachyou.ui.theme.ReachYouTheme
 
 @Composable

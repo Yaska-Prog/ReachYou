@@ -21,9 +21,9 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.reachyou.R
-import com.example.reachyou.ui.component.ItemNews
-import com.example.reachyou.ui.component.NewsHeader
-import com.example.reachyou.ui.component.TopAppBar
+import com.example.reachyou.ui.component.item.ItemNews
+import com.example.reachyou.ui.component.structure.NewsHeader
+import com.example.reachyou.ui.component.structure.TopAppBar
 import com.example.reachyou.ui.theme.ReachYouTheme
 
 @Composable

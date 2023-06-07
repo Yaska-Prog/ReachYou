@@ -1,4 +1,4 @@
-package com.example.reachyou.ui.component
+package com.example.reachyou.ui.component.inputBox
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult

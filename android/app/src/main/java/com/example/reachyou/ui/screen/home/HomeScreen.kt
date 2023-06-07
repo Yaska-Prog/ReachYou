@@ -6,8 +6,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.reachyou.data.local.SharedPreferenceManager
-import com.example.reachyou.ui.component.BodyHome
-import com.example.reachyou.ui.component.TopHomeBar
+import com.example.reachyou.ui.component.structure.BodyHome
+import com.example.reachyou.ui.component.structure.TopHomeBar
 import com.example.reachyou.ui.theme.ReachYouTheme
 
 @Composable

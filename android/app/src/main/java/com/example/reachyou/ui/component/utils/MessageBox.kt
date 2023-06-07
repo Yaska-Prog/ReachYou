@@ -1,4 +1,4 @@
-package com.example.reachyou.ui.component
+package com.example.reachyou.ui.component.utils
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button

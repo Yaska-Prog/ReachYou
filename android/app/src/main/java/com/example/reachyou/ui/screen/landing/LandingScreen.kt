@@ -12,17 +12,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.reachyou.JetReachYouApp
 import com.example.reachyou.R
-import com.example.reachyou.ui.component.ActionButton
-import com.example.reachyou.ui.component.TransparentButton
+import com.example.reachyou.ui.component.button.ActionButton
+import com.example.reachyou.ui.component.button.TransparentButton
 import com.example.reachyou.ui.theme.ReachYouTheme
 
 @Composable

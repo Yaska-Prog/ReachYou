@@ -8,7 +8,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -45,9 +44,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.reachyou.R
-import com.example.reachyou.ui.component.ActionButton
-import com.example.reachyou.ui.component.MessageBox
-import com.example.reachyou.ui.screen.register.RegisterScreen
+import com.example.reachyou.ui.component.button.ActionButton
+import com.example.reachyou.ui.component.utils.MessageBox
 import com.example.reachyou.ui.theme.ReachYouTheme
 import com.example.reachyou.ui.utils.UiState
 import com.example.reachyou.ui.utils.ViewModelFactory

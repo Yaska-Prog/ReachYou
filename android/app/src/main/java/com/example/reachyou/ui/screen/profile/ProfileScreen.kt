@@ -7,8 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.reachyou.ui.component.ProfileBody
-import com.example.reachyou.ui.component.TopProfileSection
+import com.example.reachyou.ui.component.structure.ProfileBody
+import com.example.reachyou.ui.component.structure.TopProfileSection
 import com.example.reachyou.ui.theme.ReachYouTheme
 
 @Composable
