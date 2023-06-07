@@ -1,6 +1,7 @@
 package com.example.reachyou.ui.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,16 +23,18 @@ import androidx.compose.ui.unit.dp
 import com.example.reachyou.R
 import com.example.reachyou.model.ItemHome
 import com.example.reachyou.ui.theme.ReachYouTheme
+import java.io.File
 
 @Composable
 fun BodyHome(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToScanner: (Int) -> Unit
 ) {
     val listItem = listOf<ItemHome>(
-        ItemHome(icon = ImageVector.vectorResource(id = R.drawable.hand_twofinger), "BISINDO", "Penerjemah BISINDO"),
-        ItemHome(icon = ImageVector.vectorResource(id = R.drawable.color_lens), "Warna", "Fitur Pendeteksi Warna"),
-        ItemHome(icon = ImageVector.vectorResource(id = R.drawable.uang), "Uang", "Pendeteksi Mata Uang"),
-        ItemHome(icon = ImageVector.vectorResource(id = R.drawable.emoji_objects), "Objek", "Pendeteksi Objek benda")
+        ItemHome(icon = ImageVector.vectorResource(id = R.drawable.hand_twofinger), "BISINDO", "Penerjemah BISINDO", 0),
+        ItemHome(icon = ImageVector.vectorResource(id = R.drawable.color_lens), "Warna", "Fitur Pendeteksi Warna", 1),
+        ItemHome(icon = ImageVector.vectorResource(id = R.drawable.uang), "Uang", "Pendeteksi Mata Uang", 2),
+        ItemHome(icon = ImageVector.vectorResource(id = R.drawable.emoji_objects), "Objek", "Pendeteksi Objek benda", 3)
     )
     Column(
         modifier = modifier.padding(20.dp)
@@ -46,7 +49,9 @@ fun BodyHome(
                 ItemHomeUI(
                     icon = listItem[index].icon,
                     headline = listItem[index].headline,
-                    subtitle = listItem[index].subtitle
+                    subtitle = listItem[index].subtitle,
+                    index = listItem[index].index,
+                    navigateToScanner = navigateToScanner
                 )
             }
         })
@@ -58,7 +63,9 @@ fun ItemHomeUI(
     icon: ImageVector,
     headline: String,
     subtitle: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    index: Int,
+    navigateToScanner: (Int) -> Unit
 ) {
     Card(
         colors = CardDefaults.cardColors(
@@ -67,7 +74,10 @@ fun ItemHomeUI(
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
         modifier = modifier
             .padding(10.dp)
-            .background(color = Color.White),
+            .background(color = Color.White)
+            .clickable {
+                       navigateToScanner(index)
+            },
     ) {
         Row(modifier = modifier.padding(top = 15.dp, bottom = 15.dp)) {
            Icon(imageVector = icon, contentDescription = headline, tint = Color.Unspecified)
@@ -83,6 +93,6 @@ fun ItemHomeUI(
 @Composable
 fun ItemHomePreview() {
     ReachYouTheme {
-        BodyHome()
+//        BodyHome()
     }
 }

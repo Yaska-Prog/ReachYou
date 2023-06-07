@@ -11,5 +11,7 @@ sealed class Screen(val route: String){
     object Profile: Screen("profile")
     object CreateNews: Screen("createNews")
     object SetupProfile: Screen("setupProfile")
-    object ScannerBISINDO: Screen("scannerBisindo")
+    object ScannerBISINDO: Screen("scannerBisindo/{index}"){
+        fun createRoute(index: Int) = "scannerBisindo/$index"
+    }
 }

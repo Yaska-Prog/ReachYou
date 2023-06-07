@@ -157,8 +157,7 @@ fun LoginScreen(
 
                 val user = (uiState as UiState.Success<UserModel>).data
                 sharedPreferenceManager.saveUser(user = user)
-                val shared = sharedPreferenceManager.getUser()
-                Log.d("User", shared!!.usernname)
+                navigateToHome()
             }
             is UiState.Error -> {
                 isLoading = false

@@ -22,7 +22,7 @@ class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
         viewModelScope.launch{
             authRepository.login(username, password)
                 .onStart { _uiState.value = UiState.Loading }
-                .collect{ result -> _uiState.value = result}
+                .collect{ result -> _uiState.value = result as UiState<UserModel>}
         }
     }
 }

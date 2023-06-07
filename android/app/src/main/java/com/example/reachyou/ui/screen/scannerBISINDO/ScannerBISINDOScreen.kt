@@ -74,7 +74,7 @@ fun ScannerBISINDOScreen(
     //2: Uang
     //3: Objek
     var currentIndex by rememberSaveable {
-        mutableStateOf(0)
+        mutableStateOf(index)
     }
     val listIcon = listOf<Int>(R.drawable.scanner_bisindo, R.drawable.scanner_color, R.drawable.scanner_uang, R.drawable.scanner_objek)
     val lensFacing = CameraSelector.LENS_FACING_BACK

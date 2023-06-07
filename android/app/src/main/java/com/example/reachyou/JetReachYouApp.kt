@@ -25,10 +25,12 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.reachyou.model.BottomBarItem
 import com.example.reachyou.ui.navigation.Screen
 import com.example.reachyou.ui.screen.createNews.CreateNewsScreen
@@ -63,7 +65,7 @@ fun JetReachYouApp(
     ) {innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.ScannerBISINDO.route,
+            startDestination = Screen.Home.route,
             modifier = Modifier.padding(innerPadding)){
             composable(Screen.Landing.route){
                 LandingScreen(modifier = Modifier,
@@ -83,7 +85,10 @@ fun JetReachYouApp(
                 )
             }
             composable(Screen.Home.route){
-                HomeScreen()
+                HomeScreen(
+                    navigateToScanner = {index ->
+                        navController.navigate(Screen.ScannerBISINDO.createRoute(index))}
+                )
             }
             composable(Screen.Profile.route){
                 ProfileScreen()
@@ -99,8 +104,9 @@ fun JetReachYouApp(
             composable(Screen.News.route){
                 NewsScreen(navigateToCreate = {navController.navigate(Screen.CreateNews.route)})
             }
-            composable(Screen.ScannerBISINDO.route){
-                ScannerBISINDOScreen(outputDirectory = outputDirectory, onError = {}, index = 0)
+            composable(route = Screen.ScannerBISINDO.route, arguments = listOf(navArgument("index"){type = NavType.IntType})){
+                val index = it.arguments?.getInt("index") ?: 0
+                ScannerBISINDOScreen(outputDirectory = outputDirectory, onError = {}, index = index)
             }
         }
     }
