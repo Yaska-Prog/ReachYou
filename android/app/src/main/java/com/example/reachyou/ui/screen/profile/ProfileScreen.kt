@@ -13,12 +13,13 @@ import com.example.reachyou.ui.theme.ReachYouTheme
 
 @Composable
 fun ProfileScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    openModalBottomSheet: (String) -> Unit
 ) {
     Column {
         TopProfileSection()
         Divider(thickness = 1.dp, color = Color.Black.copy(alpha = 0.5f))
-        ProfileBody()
+        ProfileBody(openModalBottomSheet = openModalBottomSheet)
     }
 }
 
@@ -26,6 +27,6 @@ fun ProfileScreen(
 @Composable
 fun ProfileScreenPreview() {
     ReachYouTheme {
-        ProfileScreen()
+//        ProfileScreen()
     }
 }

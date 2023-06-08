@@ -22,13 +22,13 @@ import com.example.reachyou.ui.theme.ReachYouTheme
 fun TopProfileSection(
     modifier: Modifier = Modifier
 ) {
-    Row(modifier = modifier.padding(40.dp)) {
+    Row(modifier = modifier.padding(start = 40.dp, end = 40.dp, top = 20.dp, bottom = 20.dp), verticalAlignment = Alignment.CenterVertically) {
         AsyncImage(
             model = "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
             contentDescription = "Profile Picture",
             contentScale = ContentScale.Crop,
             modifier = modifier
-                .size(70.dp)
+                .size(60.dp)
                 .clip(CircleShape)
         )
         Column(modifier = modifier.padding(15.dp)) {

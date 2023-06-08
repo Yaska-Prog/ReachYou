@@ -44,7 +44,7 @@ fun UploadBox(
     val stroke = Stroke(width = 2f, pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f))
     Box(modifier = modifier
         .fillMaxWidth()
-        .padding(20.dp)
+        .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
         .height(100.dp)
         .drawBehind { drawRoundRect(color = Color.Black, style = stroke) }
         .clickable {

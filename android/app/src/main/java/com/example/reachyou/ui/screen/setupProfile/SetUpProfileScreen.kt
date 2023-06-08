@@ -154,12 +154,13 @@ fun SetupProfileScreen(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
-            colors = TextFieldDefaults.textFieldColors(
-                textColor = Color.White,
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = Color.White,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
-                containerColor = Color.White.copy(0.2f)
+                focusedContainerColor = Color.White.copy(0.2f),
+                unfocusedContainerColor = Color.White.copy(0.2f)
             ),
             label = {
                 Text(text = "Username",

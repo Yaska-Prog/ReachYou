@@ -45,7 +45,9 @@ fun CreateNewsScreen(
     Column {
         BackButton()
         Text(text = "Tulis beritamu sendiri!", style = MaterialTheme.typography.titleLarge, modifier = modifier.padding(15.dp))
+        Spacer(modifier = modifier.height(10.dp))
         Text(text = "Tolong jangan menuliskan berita yang mengandung SARA", style = MaterialTheme.typography.bodyMedium, modifier = modifier.padding(start = 15.dp, end = 15.dp))
+        Spacer(modifier = modifier.height(5.dp))
         UploadBox(selectedImageByUri = selectedImageByUri, onClick = {
             photoLauncher.launch(
                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
@@ -63,7 +65,7 @@ fun CreateNewsScreen(
             input = content,
             onValueChange = { content = it }
         )
-        Spacer(modifier = modifier.height(20.dp))
+        Spacer(modifier = modifier.height(10.dp))
         ActionButton(text = "Laporkan!", onClick = {}, isLoading = false)
     }
 }

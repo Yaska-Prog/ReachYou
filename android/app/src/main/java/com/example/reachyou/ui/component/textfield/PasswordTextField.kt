@@ -38,12 +38,13 @@ fun PasswordTextField(
         value = input,
         onValueChange = onValueChange,
         shape = RoundedCornerShape(19.dp),
-        colors = TextFieldDefaults.textFieldColors(
-            textColor = Color.White,
+        colors = TextFieldDefaults.colors(
+            focusedTextColor = Color.White,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
-            containerColor = Color.White.copy(0.2f)
+            focusedContainerColor = Color.White.copy(0.2f),
+            unfocusedContainerColor = Color.White.copy(0.2f)
         ),
         modifier = modifier
             .fillMaxWidth()

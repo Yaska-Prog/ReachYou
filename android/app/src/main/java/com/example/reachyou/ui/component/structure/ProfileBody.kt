@@ -26,7 +26,8 @@ import com.example.reachyou.ui.theme.ReachYouTheme
 
 @Composable
 fun ProfileBody(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    openModalBottomSheet: (String) -> Unit
 ) {
     Column {
         Column(
@@ -35,9 +36,9 @@ fun ProfileBody(
             Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                 Text(text = "Profile", style = MaterialTheme.typography.headlineMedium)
             }
-            ItemBodyProfile(type = "Nama", value = "Christian Yaska Natawijaya")
-            ItemBodyProfile(type = "Username", value = "Yaska69")
-            ItemBodyProfile(type = "Email", value = "christianleon442@gmail.com")
+            ItemBodyProfile(type = "Nama", value = "Christian Yaska Natawijaya", openModalBottomSheet = openModalBottomSheet)
+            ItemBodyProfile(type = "Username", value = "Yaska69", openModalBottomSheet = openModalBottomSheet)
+            ItemBodyProfile(type = "Email", value = "christianleon442@gmail.com", openModalBottomSheet = openModalBottomSheet)
         }
         Divider(thickness = 1.dp, color = Color.Black.copy(alpha = 0.5f))
         Column(
@@ -96,6 +97,6 @@ fun ProfileBody(
 @Composable
 fun ProfileBodyPreview() {
     ReachYouTheme {
-        ProfileBody()
+//        ProfileBody()
     }
 }

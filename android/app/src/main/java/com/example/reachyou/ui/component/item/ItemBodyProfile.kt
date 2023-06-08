@@ -20,9 +20,10 @@ import androidx.compose.ui.unit.dp
 fun ItemBodyProfile(
     modifier: Modifier = Modifier,
     type: String,
-    value: String
+    value: String,
+    openModalBottomSheet: (String) -> Unit
 ) {
-    Row(modifier = modifier.fillMaxWidth().padding(start = 20.dp, end = 20.dp, bottom = 10.dp, top = 10.dp), horizontalArrangement = Arrangement.SpaceBetween,
+    Row(modifier = modifier.fillMaxWidth().padding(start = 20.dp, end = 20.dp, bottom = 10.dp, top = 5.dp), horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = type)
@@ -30,7 +31,7 @@ fun ItemBodyProfile(
             Text(modifier = modifier.padding(end = 7.dp ), text = value, style = MaterialTheme.typography.displayMedium)
             IconButton(
                 modifier = modifier.size(15.dp),
-                onClick = { /*TODO*/ }) {
+                onClick = { openModalBottomSheet(type) }) {
                 Icon(imageVector = Icons.Filled.Edit, contentDescription = "Edit $type")
             }
         }

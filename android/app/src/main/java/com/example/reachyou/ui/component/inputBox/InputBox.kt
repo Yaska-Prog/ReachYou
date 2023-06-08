@@ -32,7 +32,7 @@ fun InputBox(
     onValueChange:(String) -> Unit
 ) {
     Column(
-        modifier = modifier.padding(20.dp)
+        modifier = modifier.padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
     ) {
         Text(text = title, style = MaterialTheme.typography.bodyMedium)
         Spacer(modifier = modifier.height(5.dp))
