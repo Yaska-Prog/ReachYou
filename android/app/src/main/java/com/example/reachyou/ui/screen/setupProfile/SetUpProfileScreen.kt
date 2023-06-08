@@ -49,6 +49,13 @@ import com.example.reachyou.ui.component.utils.MessageBox
 import com.example.reachyou.ui.theme.ReachYouTheme
 import com.example.reachyou.ui.utils.UiState
 import com.example.reachyou.ui.utils.ViewModelFactory
+import com.example.reachyou.ui.utils.reduceFileImage
+import com.example.reachyou.ui.utils.uriToFile
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,10 +81,12 @@ fun SetupProfileScreen(
     var isLoading by rememberSaveable {
         mutableStateOf(false)
     }
+    val context = LocalContext.current
     if(isSuccessMessagebox){
         MessageBox(title = "Sukses melakukan Set up profile!",
             message = "Set up profile berhasil! Silahkan menuju ke halaman login!", onDismiss = {
                 isSuccessMessagebox = false
+                viewModel.updateUiState()
                 navigateToLogin()
             })
     }
@@ -85,7 +94,10 @@ fun SetupProfileScreen(
         MessageBox(
             title = "Gagal melakukan Set up profile!",
             message = "Set up profile gagal! Cek kembali data yang ingin di kirimkan!",
-            onDismiss = {isFailedMessagebox = false}
+            onDismiss = {
+                isFailedMessagebox = false
+                viewModel.updateUiState()
+            }
         )
     }
     Column(
@@ -161,8 +173,17 @@ fun SetupProfileScreen(
         )
         Spacer(modifier = Modifier.height(32.dp))
         ActionButton(text = "Continue", onClick = {
-            if(selectedImageByUri != null){
-                viewModel.setupProfile(username, selectedImageByUri)
+            if(selectedImageByUri != null && username != ""){
+                val file = uriToFile(selectedImg = selectedImageByUri!!, context = context)
+                val reducedFile = reduceFileImage(file)
+                val requestImageFile = reducedFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
+                val imageMultiPart : MultipartBody.Part = MultipartBody.Part.createFormData(
+                    "photo",
+                    file.name,
+                    requestImageFile
+                )
+                val usernameMultipart = username.toRequestBody("text/plain".toMediaType())
+                viewModel.setupProfile(usernameMultipart, imageMultiPart)
             }
             else{
                 isFailedMessagebox = true

@@ -25,4 +25,8 @@ class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
                 .collect{ result -> _uiState.value = result as UiState<UserModel>}
         }
     }
+
+    fun updateUiState(){
+        _uiState.value = UiState.Idle
+    }
 }

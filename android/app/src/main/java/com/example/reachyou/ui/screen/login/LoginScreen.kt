@@ -77,6 +77,7 @@ fun LoginScreen(
     if(isSuccessMessagebox){
         MessageBox(title = "Sukses melakukan login!", message = "Silahkan menuju ke halaman home", onDismiss = {
             isSuccessMessagebox = false
+            viewModel.updateUiState()
             navigateToHome()
         })
     }
@@ -84,7 +85,10 @@ fun LoginScreen(
         MessageBox(
             title = "Gagal melakukan login!",
             message = "Login gagal! Tolong lakukan login kembali!",
-            onDismiss = {isFailedMessagebox = false}
+            onDismiss = {
+                isFailedMessagebox = false
+                viewModel.updateUiState()
+            }
         )
     }
     Column(

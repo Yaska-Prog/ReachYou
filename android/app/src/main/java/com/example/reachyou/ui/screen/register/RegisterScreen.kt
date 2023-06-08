@@ -48,13 +48,13 @@ fun RegisterScreen(
     navigateToLogin: () -> Unit
 ) {
     var email by rememberSaveable {
-        mutableStateOf("")
+        mutableStateOf("Yaska@gmail.com")
     }
     var password by rememberSaveable {
-        mutableStateOf("")
+        mutableStateOf("secretpassword")
     }
     var reTypePassword by rememberSaveable {
-        mutableStateOf("")
+        mutableStateOf("secretpassword")
     }
     val uiState by viewModel.uiState.collectAsState()
     var isSuccessMessagebox by rememberSaveable {
@@ -73,14 +73,18 @@ fun RegisterScreen(
         MessageBox(title = "Sukses melakukan register!",
             message = "Register berhasil! Silahkan menuju ke halaman login", onDismiss = {
             isSuccessMessagebox = false
-                navigateToSetupProfile()
+            viewModel.updateUiState()
+            navigateToSetupProfile()
         })
     }
     if(isFailedMessagebox){
         MessageBox(
             title = "Gagal melakukan register!",
             message = "Register gagal! Cek kembali data yang ingin di kirimkan!",
-            onDismiss = {isFailedMessagebox = false}
+            onDismiss = {
+                isFailedMessagebox = false
+                viewModel.updateUiState()
+            }
         )
     }
     Column(

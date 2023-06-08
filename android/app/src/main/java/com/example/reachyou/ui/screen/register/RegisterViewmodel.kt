@@ -21,4 +21,7 @@ class RegisterViewmodel(private val authRepository: AuthRepository): ViewModel()
                 .collect{result -> _uiState.value = result}
         }
     }
+    fun updateUiState(){
+        _uiState.value = UiState.Idle
+    }
 }
