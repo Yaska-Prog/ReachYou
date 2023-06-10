@@ -39,9 +39,12 @@ import androidx.navigation.navArgument
 import com.example.reachyou.model.BottomBarItem
 import com.example.reachyou.ui.component.utils.BottomSheetEditProfile
 import com.example.reachyou.ui.navigation.Screen
+import com.example.reachyou.ui.screen.QuizScreen.QuizScreen
 import com.example.reachyou.ui.screen.createNews.CreateNewsScreen
+import com.example.reachyou.ui.screen.detailQuiz.DetailQuizScreen
 import com.example.reachyou.ui.screen.home.HomeScreen
 import com.example.reachyou.ui.screen.landing.LandingScreen
+import com.example.reachyou.ui.screen.laporBug.LaporBugScreen
 import com.example.reachyou.ui.screen.login.LoginScreen
 import com.example.reachyou.ui.screen.news.NewsScreen
 import com.example.reachyou.ui.screen.profile.ProfileScreen
@@ -99,7 +102,7 @@ fun JetReachYouApp(
         }
         NavHost(
             navController = navController,
-            startDestination = Screen.Profile.route,
+            startDestination = Screen.Quiz.route,
             modifier = Modifier.padding(innerPadding)){
             composable(Screen.Landing.route){
                 LandingScreen(modifier = Modifier,
@@ -131,11 +134,12 @@ fun JetReachYouApp(
                         scope.launch {
                             sheetState.show()
                         }
-                    }
+                    },
+                    navigateToLaporBug = {navController.navigate(Screen.LaporBug.route)}
                 )
             }
             composable(Screen.CreateNews.route){
-                CreateNewsScreen()
+                CreateNewsScreen(navigateToNews = {navController.navigate(Screen.News.route)})
             }
             composable(Screen.SetupProfile.route){
                 SetupProfileScreen(
@@ -148,6 +152,18 @@ fun JetReachYouApp(
             composable(route = Screen.ScannerBISINDO.route, arguments = listOf(navArgument("index"){type = NavType.IntType})){
                 val index = it.arguments?.getInt("index") ?: 0
                 ScannerBISINDOScreen(outputDirectory = outputDirectory, onError = {}, index = index)
+            }
+            composable(route = Screen.LaporBug.route){
+                LaporBugScreen(onBackButtonPressed = {navController.navigate(Screen.LaporBug.route)})
+            }
+            composable(route = Screen.Quiz.route){
+                QuizScreen(navigateToDetailQuiz = {id ->
+                    navController.navigate(Screen.DetailQuiz.createRoute(id))
+                })
+            }
+            composable(route = Screen.DetailQuiz.route, arguments = listOf(navArgument("id"){type = NavType.IntType})){
+                val id = it.arguments?.getInt("id") ?: 0
+                DetailQuizScreen(type = id, navigateToQuiz = {navController.navigate(Screen.Quiz.route)})
             }
         }
     }

@@ -3,6 +3,7 @@ package com.example.reachyou.ui.component.item
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,8 +31,10 @@ fun ItemQuiz(
     modifier: Modifier = Modifier,
     title: String,
     subtitle: String,
-    totalCoin: Int
-) {
+    totalCoin: Int,
+    navigateToDetailQuiz: (Int) -> Unit,
+    id: Int
+    ) {
     Box(modifier = modifier
         .fillMaxWidth()
         .height(180.dp)
@@ -39,6 +42,9 @@ fun ItemQuiz(
         .border(
             border = BorderStroke(2.dp, Color.Black)
         )
+        .clickable {
+            navigateToDetailQuiz(id)
+        }
 
     ){
         Column {
@@ -67,9 +73,9 @@ fun ItemQuiz(
 @Preview(showBackground = true)
 @Composable
 fun ItemQuizPreview() {
-    ItemQuiz(
-        title = "Tebak bahasa isyarat BISINDO (mudah)",
-        subtitle = "Quiz BISINDO (Mudah)",
-        totalCoin = 60
-    )
+//    ItemQuiz(
+//        title = "Tebak bahasa isyarat BISINDO (mudah)",
+//        subtitle = "Quiz BISINDO (Mudah)",
+//        totalCoin = 60
+//    )
 }

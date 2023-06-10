@@ -14,12 +14,13 @@ import com.example.reachyou.ui.theme.ReachYouTheme
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
-    openModalBottomSheet: (String) -> Unit
+    openModalBottomSheet: (String) -> Unit,
+    navigateToLaporBug: () -> Unit
 ) {
     Column {
         TopProfileSection()
         Divider(thickness = 1.dp, color = Color.Black.copy(alpha = 0.5f))
-        ProfileBody(openModalBottomSheet = openModalBottomSheet)
+        ProfileBody(openModalBottomSheet = openModalBottomSheet, navigateToLaporBug = navigateToLaporBug)
     }
 }
 

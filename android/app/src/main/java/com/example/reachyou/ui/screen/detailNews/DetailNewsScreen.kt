@@ -32,7 +32,8 @@ import com.example.reachyou.ui.theme.ReachYouTheme
 
 @Composable
 fun DetailNewsScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToNews: () -> Unit
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
@@ -45,7 +46,7 @@ fun DetailNewsScreen(
                 .aspectRatio(1f)
                 .fillMaxSize()
         )
-        BackButton()
+        BackButton(onClick = navigateToNews)
         Box(modifier = modifier
             .padding(top = 250.dp)
             .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
@@ -89,6 +90,6 @@ fun DetailNewsScreen(
 @Composable
 fun DetailNewsPreview() {
     ReachYouTheme {
-        DetailNewsScreen()
+//        DetailNewsScreen()
     }
 }

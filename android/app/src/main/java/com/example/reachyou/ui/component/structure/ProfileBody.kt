@@ -1,5 +1,6 @@
 package com.example.reachyou.ui.component.structure
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,7 +28,8 @@ import com.example.reachyou.ui.theme.ReachYouTheme
 @Composable
 fun ProfileBody(
     modifier: Modifier = Modifier,
-    openModalBottomSheet: (String) -> Unit
+    openModalBottomSheet: (String) -> Unit,
+    navigateToLaporBug: () -> Unit
 ) {
     Column {
         Column(
@@ -72,7 +74,8 @@ fun ProfileBody(
                 colors = CardDefaults.cardColors(Color.White),
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(15.dp),
+                    .padding(15.dp)
+                    .clickable { navigateToLaporBug() },
                 elevation = CardDefaults.cardElevation(
                     defaultElevation = 15.dp
                 )

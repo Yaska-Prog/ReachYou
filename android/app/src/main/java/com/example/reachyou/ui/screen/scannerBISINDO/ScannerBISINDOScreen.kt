@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -74,7 +75,7 @@ fun ScannerBISINDOScreen(
     //2: Uang
     //3: Objek
     var currentIndex by rememberSaveable {
-        mutableStateOf(index)
+        mutableIntStateOf(index)
     }
     val listIcon = listOf<Int>(R.drawable.scanner_bisindo, R.drawable.scanner_color, R.drawable.scanner_uang, R.drawable.scanner_objek)
     val lensFacing = CameraSelector.LENS_FACING_BACK
@@ -96,10 +97,10 @@ fun ScannerBISINDOScreen(
         }
     }
     var leftButtonIcon by rememberSaveable {
-        mutableStateOf<Int>(if(currentIndex >= 1) currentIndex-1 else 10)
+        mutableIntStateOf(if(currentIndex >= 1) currentIndex-1 else 10)
     }
     var rightButtonIcon by rememberSaveable {
-        mutableStateOf<Int>(if(currentIndex < 3) currentIndex+1 else 10)
+        mutableIntStateOf(if(currentIndex < 3) currentIndex+1 else 10)
     }
     val leftButtonScale by animateFloatAsState(
         targetValue = 0.8f,

@@ -12,9 +12,10 @@ import com.example.reachyou.ui.theme.ReachYouTheme
 
 @Composable
 fun BackButton(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
-    IconButton(onClick = { /*TODO*/ }){
+    IconButton(onClick = onClick){
         Icon(imageVector = ImageVector.vectorResource(id = R.drawable.back_button),
             contentDescription = "Custom back buttton")
     }
@@ -24,6 +25,6 @@ fun BackButton(
 @Composable
 fun BackButttonPreview() {
     ReachYouTheme {
-        BackButton()
+//        BackButton()
     }
 }

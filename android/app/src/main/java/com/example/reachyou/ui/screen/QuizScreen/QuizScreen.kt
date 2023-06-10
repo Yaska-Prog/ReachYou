@@ -9,24 +9,31 @@ import com.example.reachyou.ui.component.structure.TopAppBar
 
 @Composable
 fun QuizScreen(
-    modifier: Modifier = Modifier
-) {
+    modifier: Modifier = Modifier,
+    navigateToDetailQuiz: (Int) -> Unit,
+    ) {
     Column {
         TopAppBar(title = "Quiz")
         ItemQuiz(
             title = "Tebak bahasa isyarat BISNDO (Mudah)",
             subtitle = "Quiz Bisindo (mudah)",
-            totalCoin = 60
+            totalCoin = 60,
+            navigateToDetailQuiz = navigateToDetailQuiz,
+            id = 1
         )
         ItemQuiz(
             title = "Tebak bahasa isyarat BISINDO (Sedang)",
             subtitle = "Quiz Bisindo (Sedang)",
-            totalCoin = 100
+            totalCoin = 100,
+            navigateToDetailQuiz = navigateToDetailQuiz,
+            id = 2
         )
         ItemQuiz(
             title = "Tebak huruf braille",
             subtitle = "Quiz Braille",
-            totalCoin = 40
+            totalCoin = 40,
+            navigateToDetailQuiz = navigateToDetailQuiz,
+            id = 3
         )
     }
 }
@@ -34,5 +41,5 @@ fun QuizScreen(
 @Preview(showBackground = true)
 @Composable
 fun QuizScreenPreview() {
-    QuizScreen()
+//    QuizScreen()
 }

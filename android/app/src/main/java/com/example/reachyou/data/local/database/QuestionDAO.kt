@@ -7,8 +7,8 @@ import androidx.room.Query
 @Dao
 interface QuestionDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertQuestion(question: Question)
+    fun insertQuestion(question: List<Question>)
 
-    @Query("SELECT * FROM Question WHERE jenis_quiz = :type")
-    fun getQuestionBasedOnType(type: String): List<Question>
+    @Query("SELECT * FROM Question WHERE jenis_quiz = :type order by id ASC")
+    fun getQuestionBasedOnType(type: Int): List<Question>
 }

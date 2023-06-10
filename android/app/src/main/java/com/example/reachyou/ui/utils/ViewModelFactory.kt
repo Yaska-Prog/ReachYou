@@ -4,12 +4,14 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.reachyou.data.repository.AuthRepository
+import com.example.reachyou.data.repository.QuizRepository
+import com.example.reachyou.ui.screen.detailQuiz.DetailQuizViewmodel
 import com.example.reachyou.ui.screen.login.LoginViewModel
 import com.example.reachyou.ui.screen.register.RegisterViewmodel
 import com.example.reachyou.ui.screen.setupProfile.SetUpProfileViewModel
 
 @Suppress("UNCHECKED_CAST")
-class ViewModelFactory(private val authRepository: AuthRepository? = null): ViewModelProvider.NewInstanceFactory() {
+class ViewModelFactory(private val authRepository: AuthRepository? = null, private val quizRepository: QuizRepository? = null): ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(LoginViewModel::class.java)){
             return LoginViewModel(authRepository as AuthRepository) as T
@@ -20,6 +22,9 @@ class ViewModelFactory(private val authRepository: AuthRepository? = null): View
         else if(modelClass.isAssignableFrom(SetUpProfileViewModel::class.java)){
             return SetUpProfileViewModel(authRepository as AuthRepository) as T
         }
+        else if(modelClass.isAssignableFrom(DetailQuizViewmodel::class.java)){
+            return DetailQuizViewmodel(quizRepository as QuizRepository) as T
+        }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }
 
@@ -29,7 +34,13 @@ class ViewModelFactory(private val authRepository: AuthRepository? = null): View
 
         fun getUserInstance(context: Context): ViewModelFactory =
             instance ?: synchronized(this){
-                instance ?: ViewModelFactory(authRepository = Injection.provideAuthRepository(context = context))
+                instance ?: ViewModelFactory(authRepository = Injection.provideAuthRepository())
             }.also { instance = it }
+
+        private var quizInstance: ViewModelFactory? = null
+        fun getQuizInstance(context: Context): ViewModelFactory =
+            quizInstance ?: synchronized(this){
+                quizInstance ?: ViewModelFactory(quizRepository = Injection.provideQuizRepository(context))
+            }.also { quizInstance = it }
     }
 }

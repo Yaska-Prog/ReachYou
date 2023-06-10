@@ -28,7 +28,8 @@ import com.example.reachyou.ui.component.inputBox.UploadBox
 
 @Composable
 fun LaporBugScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onBackButtonPressed: () -> Unit
 ) {
     var selectedImageByUri by remember {
         mutableStateOf<Uri?>(null)
@@ -45,7 +46,7 @@ fun LaporBugScreen(
     }
 
     Column {
-        BackButton()
+        BackButton(onClick = onBackButtonPressed)
         Text(text = "Laporkan Bug", style = MaterialTheme.typography.titleLarge, modifier = modifier.padding(15.dp))
         Text(text = "Bantu kami untuk menjadi  lebih bermanfaat dengan cara melaporkan bug atau kendala yang anda alami!", style = MaterialTheme.typography.bodyMedium, modifier = modifier.padding(start = 15.dp, end = 15.dp))
         UploadBox(selectedImageByUri = selectedImageByUri, onClick = {
@@ -74,6 +75,6 @@ fun LaporBugScreen(
 @Composable
 fun LaporBugScreenPreview() {
     ReachYouTheme {
-        LaporBugScreen()
+//        LaporBugScreen()
     }
 }

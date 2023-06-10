@@ -25,5 +25,5 @@ data class Question(
     @ColumnInfo(name = "jawaban_benar")
     var jawaban_benar: String,
     @ColumnInfo(name = "jenis_quiz")
-    var jenis_quiz: String,
+    var jenis_quiz: Int,
 )

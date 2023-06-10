@@ -14,4 +14,8 @@ sealed class Screen(val route: String){
     object ScannerBISINDO: Screen("scannerBisindo/{index}"){
         fun createRoute(index: Int) = "scannerBisindo/$index"
     }
+    object LaporBug: Screen("laporBug")
+    object DetailQuiz: Screen("detailQuiz/{id}"){
+        fun createRoute(id: Int) = "detailQuiz/$id"
+    }
 }

@@ -27,7 +27,8 @@ import com.example.reachyou.ui.component.inputBox.UploadBox
 
 @Composable
 fun CreateNewsScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToNews: () -> Unit
 ) {
     var selectedImageByUri by remember {
         mutableStateOf<Uri?>(null)
@@ -43,7 +44,7 @@ fun CreateNewsScreen(
         mutableStateOf("")
     }
     Column {
-        BackButton()
+        BackButton(onClick = navigateToNews)
         Text(text = "Tulis beritamu sendiri!", style = MaterialTheme.typography.titleLarge, modifier = modifier.padding(15.dp))
         Spacer(modifier = modifier.height(10.dp))
         Text(text = "Tolong jangan menuliskan berita yang mengandung SARA", style = MaterialTheme.typography.bodyMedium, modifier = modifier.padding(start = 15.dp, end = 15.dp))
@@ -74,6 +75,6 @@ fun CreateNewsScreen(
 @Composable
 fun LaporBugScreenPreview() {
     ReachYouTheme {
-        CreateNewsScreen()
+//        CreateNewsScreen()
     }
 }

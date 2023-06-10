@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.reachyou.data.local.PertanyaanQuiz
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -31,7 +32,7 @@ abstract class QuestionRoomDatabase: RoomDatabase() {
                                 INSTANCE.let { database ->
                                     applicationScope.launch {
                                         val questionDAO = database!!.questionDao()
-//                                        val question1 = Question
+                                        questionDAO.insertQuestion(PertanyaanQuiz.getQuizBisindoMudah())
                                     }
                                 }
                             }

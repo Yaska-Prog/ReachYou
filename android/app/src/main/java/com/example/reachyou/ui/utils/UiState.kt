@@ -8,4 +8,6 @@ sealed class UiState<out T: Any?> {
     data class Error(val errorMessage: String) : UiState<Nothing>()
 
     object Idle: UiState<Nothing>()
+
+    object Finish: UiState<Nothing>()
 }
