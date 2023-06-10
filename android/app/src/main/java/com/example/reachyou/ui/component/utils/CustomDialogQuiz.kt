@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -36,8 +38,7 @@ fun CustomDialogQuiz(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
     modifier: Modifier = Modifier,
-    title: String,
-    subtitle: String
+    isSuccess: Boolean
 ) {
     Dialog(
         onDismissRequest = onDismiss,
@@ -57,19 +58,19 @@ fun CustomDialogQuiz(
                 Box(modifier = modifier
                     .size(70.dp)
                     .background(
-                        color = Color.Green,
+                        color = if(isSuccess) Color.Green else Color.Red,
                         shape = CircleShape
                     ),
                     contentAlignment = Alignment.Center
                     ){
-                    Icon(imageVector = Icons.Default.Done, contentDescription = "Done Icon", modifier = modifier.size(40.dp), tint = Color.White)
+                    Icon(imageVector = if(isSuccess) Icons.Default.Done else Icons.Default.Close, contentDescription = "Done Icon", modifier = modifier.size(40.dp), tint = Color.White)
                 }
-                Text(text = title, style = MaterialTheme.typography.headlineMedium, color = Color.Black)
-                Text(text = subtitle, style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
+                Text(text = if(isSuccess) "Berhasil!" else "Gagal!", style = MaterialTheme.typography.headlineMedium, color = Color.Black)
+                Text(text = if(isSuccess) "Berhasil menyelesaikan quiz!" else "Gagal menyelesaikan quiz!", style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
                 Button(onClick = onConfirm, shape = RoundedCornerShape(20.dp), modifier = modifier
                     .fillMaxWidth()
                     .padding(30.dp), colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Green,
+                    containerColor = if(isSuccess) Color.Green else Color.Red,
                     contentColor = Color.White
                     )) {
                         Text(
@@ -90,8 +91,7 @@ fun CustomDialogPreview() {
         CustomDialogQuiz(
             onDismiss = { /*TODO*/ },
             onConfirm = { /*TODO*/ },
-            title = "Success",
-            subtitle = "Berhasil menyelesaikan kuis!"
+            isSuccess = true
         )
     }
 }

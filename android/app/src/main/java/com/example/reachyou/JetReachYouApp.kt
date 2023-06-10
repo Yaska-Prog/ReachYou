@@ -73,15 +73,61 @@ fun JetReachYouApp(
     var inputEditProfile by rememberSaveable {
         mutableStateOf("")
     }
+    var selectedItem by remember {
+        mutableIntStateOf(0)
+    }
+    val bottomNavItem = listOf<BottomBarItem>(
+        BottomBarItem("home", Icons.Default.Home, Screen.Home),
+        BottomBarItem("news", ImageVector.vectorResource(id = R.drawable.newspaper_icon), Screen.News),
+        BottomBarItem("quiz", ImageVector.vectorResource(id = R.drawable.question_answer), Screen.Quiz),
+        BottomBarItem("profile", ImageVector.vectorResource(id = R.drawable.person), Screen.Profile),
+    )
     Scaffold(
         topBar = {},
         bottomBar ={
             if(currentRoute.toString() == Screen.Home.route ||
                 currentRoute.toString() == Screen.News.route ||
+                currentRoute.toString() == Screen.Quiz.route ||
                 currentRoute.toString() == Screen.Profile.route &&
                 !sheetState.isVisible){
                 Log.d("route", "false $currentRoute")
-                BottomBar(navController = navController)
+                NavigationBar (
+                    containerColor = Color(android.graphics.Color.parseColor("#064958")),
+                    contentColor = Color.Yellow,
+                    tonalElevation = 5.dp,
+                    modifier = Modifier
+                        .graphicsLayer {
+                            shape = RoundedCornerShape(topEnd = 30.dp, topStart = 30.dp)
+                            clip = true
+                        },
+                ) {
+                    bottomNavItem.forEachIndexed { index, item ->
+                        NavigationBarItem(
+                            selected = selectedItem == index,
+                            onClick = {
+                                selectedItem = index
+                                navController.navigate(item.screen.route){
+                                    popUpTo(navController.graph.findStartDestination().id){
+                                        saveState = true
+                                    }
+                                    restoreState = true
+                                    launchSingleTop = true
+                                }
+                            },
+                            colors = NavigationBarItemDefaults.colors(
+                                indicatorColor = Color(android.graphics.Color.parseColor("#4F4626")),
+                            ),
+                            icon = {
+                                Icon(
+                                    imageVector = item.icon,
+                                    contentDescription = item.title,
+                                    tint = Color(android.graphics.Color.parseColor("#FFDB58"))
+                                )
+                            },
+                            label = { Text(text = item.title, color = Color.White)},
+                        )
+                    }
+                }
             }
         }
     ) {innerPadding ->
@@ -102,7 +148,7 @@ fun JetReachYouApp(
         }
         NavHost(
             navController = navController,
-            startDestination = Screen.Quiz.route,
+            startDestination = Screen.Home.route,
             modifier = Modifier.padding(innerPadding)){
             composable(Screen.Landing.route){
                 LandingScreen(modifier = Modifier,
@@ -113,6 +159,11 @@ fun JetReachYouApp(
                 LoginScreen(
                     navigateToRegister = {navController.navigate(Screen.Register.route)},
                     navigateToHome = {navController.navigate(Screen.Home.route)}
+                )
+            }
+            composable(Screen.SetupProfile.route){
+                SetupProfileScreen(
+                    navigateToLogin = {navController.navigate(Screen.Login.route)}
                 )
             }
             composable(Screen.Register.route){
@@ -140,11 +191,6 @@ fun JetReachYouApp(
             }
             composable(Screen.CreateNews.route){
                 CreateNewsScreen(navigateToNews = {navController.navigate(Screen.News.route)})
-            }
-            composable(Screen.SetupProfile.route){
-                SetupProfileScreen(
-                    navigateToLogin = {navController.navigate(Screen.Login.route)}
-                )
             }
             composable(Screen.News.route){
                 NewsScreen(navigateToCreate = {navController.navigate(Screen.CreateNews.route)})

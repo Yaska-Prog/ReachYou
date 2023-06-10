@@ -5,25 +5,40 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.reachyou.data.local.SharedPreferenceManager
 import com.example.reachyou.data.local.database.Question
 import com.example.reachyou.data.repository.QuizRepository
 import com.example.reachyou.model.UserModel
 import com.example.reachyou.ui.utils.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class DetailQuizViewmodel(private val quizRepository: QuizRepository): ViewModel() {
     private var listQuiz: List<Question> = listOf()
     var currentQuestionIndex: Int = 0
     var totalCorrectAnswer: Int = 0
+    private var coinMultiplier: Int = 0
 
     private val _uiState = MutableStateFlow<UiState<Question>>(UiState.Idle)
     val uiState: StateFlow<UiState<Question>> = _uiState
 
+
     var isDialogShown by mutableStateOf(false)
+    var isSuccess by mutableStateOf(false)
 
     fun getListQuestion(type: Int){
+        if(type == 1){
+            coinMultiplier = 12
+        }
+        else if(type == 2){
+            coinMultiplier = 20
+        }
+        else if(type == 3){
+            coinMultiplier = 12
+        }
         viewModelScope.launch {
             quizRepository.getQuiz(type)
                 .collect{result ->
@@ -45,15 +60,40 @@ class DetailQuizViewmodel(private val quizRepository: QuizRepository): ViewModel
     }
 
     fun answerQuestion(answer: String){
-        _uiState.value = UiState.Loading
         if(answer == listQuiz[currentQuestionIndex].jawaban_benar){
             totalCorrectAnswer++
         }
         if(currentQuestionIndex < listQuiz.size - 1){
             currentQuestionIndex++
+            getQuestion()
         }
         else if(currentQuestionIndex >= listQuiz.size -1){
-            isDialogShown = true
+            _uiState.value = UiState.Finish
+        }
+    }
+    fun finishQUiz(userId: String){
+        val coin = coinMultiplier * totalCorrectAnswer
+        viewModelScope.launch {
+            quizRepository.finishQuiz(userId = userId, coin = coin)
+                .onStart { _uiState.value = UiState.Loading }
+                .collect{result ->
+                    when(result){
+                        is UiState.Success -> {
+                            _uiState.value = UiState.Idle
+                            isSuccess = true
+                            isDialogShown = true
+                        }
+                        is UiState.Error -> {
+                            isSuccess = false
+                            isDialogShown = true
+                        }
+                        UiState.Loading -> {
+                            _uiState.value = UiState.Loading
+                        }
+
+                        else -> {}
+                    }
+                }
         }
     }
     fun onDismissDialog(){

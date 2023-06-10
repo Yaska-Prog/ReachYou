@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.reachyou.data.local.SharedPreferenceManager
 import com.example.reachyou.data.local.database.Question
 import com.example.reachyou.ui.component.button.BackButton
 import com.example.reachyou.ui.component.utils.CustomDialogQuiz
@@ -39,10 +40,13 @@ fun DetailQuizScreen(
     navigateToQuiz: () -> Unit,
     viewModel: DetailQuizViewmodel = androidx.lifecycle.viewmodel.compose.viewModel(factory = ViewModelFactory.getQuizInstance(
         LocalContext.current
-    ))
+    )),
+    sharedPreferenceManager: SharedPreferenceManager = SharedPreferenceManager(LocalContext.current)
 ) {
-    viewModel.getListQuestion(type)
-    viewModel.getQuestion()
+    if(viewModel.currentQuestionIndex == 0){
+        viewModel.getListQuestion(type)
+        viewModel.getQuestion()
+    }
     val uiState by viewModel.uiState.collectAsState()
     BackButton(onClick = {})
     if(viewModel.isDialogShown){
@@ -55,30 +59,36 @@ fun DetailQuizScreen(
                 viewModel.onDismissDialog()
                 navigateToQuiz()
             },
-            title = "Berhasil",
-            subtitle = "Berhasil menyelesaikan quiz, selamat anda benar ${viewModel.totalCorrectAnswer} dari ${viewModel.currentQuestionIndex + 1}"
+            isSuccess = viewModel.isSuccess
         )
     }
-    when(uiState){
-        is UiState.Loading -> {
-            CircularProgressIndicator()
-        }
-        is UiState.Success -> {
-            val question = (uiState as UiState.Success<Question>).data
-            Column(
-                modifier = modifier
-                    .fillMaxSize()
-                    .background(
-                        Brush.linearGradient(
-                            listOf(
-                                Color(android.graphics.Color.parseColor("#CF4FCA")),
-                                Color(android.graphics.Color.parseColor("#38E1E1")),
-                            )
-                        )
-                    ),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(
+                Brush.linearGradient(
+                    listOf(
+                        Color(android.graphics.Color.parseColor("#CF4FCA")),
+                        Color(android.graphics.Color.parseColor("#38E1E1")),
+                    )
+                )
+            ),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        when(uiState){
+            is UiState.Loading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = modifier.size(20.dp)
+                    )
+                }
+            }
+            is UiState.Success -> {
+                val question = (uiState as UiState.Success<Question>).data
                 Text(
                     text = "Pertanyaan ke ${viewModel.currentQuestionIndex + 1}",
                     style = MaterialTheme.typography.bodyMedium,
@@ -97,29 +107,38 @@ fun DetailQuizScreen(
                 )
                 AnswerQuiz(answer = question.jawaban_a, onClick = {
                     viewModel.answerQuestion("A")
-                    viewModel.getQuestion()
+//                    viewModel.getQuestion()
                 })
                 AnswerQuiz(answer = question.jawaban_b, onClick = {
                     viewModel.answerQuestion("B")
-                    viewModel.getQuestion()
+//                    viewModel.getQuestion()
                 })
                 AnswerQuiz(answer = question.jawaban_c, onClick = {
                     viewModel.answerQuestion("C")
-                    viewModel.getQuestion()
+//                    viewModel.getQuestion()
                 })
                 AnswerQuiz(answer = question.jawaban_d, onClick = {
                     viewModel.answerQuestion("D")
-                    viewModel.getQuestion()
+//                    viewModel.getQuestion()
                 })
             }
-        }
+            is UiState.Finish -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = modifier.size(20.dp)
+                    )
+                }
+                val user = sharedPreferenceManager.getUser()
+                viewModel.finishQUiz(user!!.id)
+            }
 
-        is UiState.Error -> TODO()
-        is UiState.Idle -> TODO()
-        is UiState.Finish -> {
-            navigateToQuiz()
+            else -> {}
         }
     }
+
 
 }
 

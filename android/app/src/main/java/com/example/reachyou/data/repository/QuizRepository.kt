@@ -7,7 +7,8 @@ import kotlinx.coroutines.flow.flow
 
 class QuizRepository(
     private val apiService: ApiService,
-    private val questionDao: QuestionDAO) {
+    private val questionDao: QuestionDAO,
+    ) {
 
     fun getQuiz(type: Int)= flow {
         emit(UiState.Loading)
@@ -21,6 +22,22 @@ class QuizRepository(
             }
         } catch (e: Exception){
             emit(UiState.Error(e.message as String))
+        }
+    }
+
+    fun finishQuiz(coin: Int, userId: String) = flow {
+        emit(UiState.Loading)
+        try {
+            val client = apiService.updateCoin(userId, coin)
+            if(client.isSuccessful){
+                emit(UiState.Success("Berhasil melakukan update koin"))
+            }
+            else{
+                emit(UiState.Error("Client gagal!"))
+            }
+        }
+        catch (e: Exception){
+            emit(UiState.Error(e.message.toString()))
         }
     }
     companion object{
