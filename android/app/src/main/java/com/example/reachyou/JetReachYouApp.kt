@@ -41,6 +41,7 @@ import com.example.reachyou.ui.component.utils.BottomSheetEditProfile
 import com.example.reachyou.ui.navigation.Screen
 import com.example.reachyou.ui.screen.QuizScreen.QuizScreen
 import com.example.reachyou.ui.screen.createNews.CreateNewsScreen
+import com.example.reachyou.ui.screen.detailNews.DetailNewsScreen
 import com.example.reachyou.ui.screen.detailQuiz.DetailQuizScreen
 import com.example.reachyou.ui.screen.home.HomeScreen
 import com.example.reachyou.ui.screen.landing.LandingScreen
@@ -193,11 +194,15 @@ fun JetReachYouApp(
                 CreateNewsScreen(navigateToNews = {navController.navigate(Screen.News.route)})
             }
             composable(Screen.News.route){
-                NewsScreen(navigateToCreate = {navController.navigate(Screen.CreateNews.route)})
+                NewsScreen(navigateToCreate = {navController.navigate(Screen.CreateNews.route)},
+                    navigateToDetail = {index->
+                        navController.navigate(Screen.DetailNews.createRoute(index))
+                        }
+                    )
             }
             composable(route = Screen.ScannerBISINDO.route, arguments = listOf(navArgument("index"){type = NavType.IntType})){
                 val index = it.arguments?.getInt("index") ?: 0
-                ScannerBISINDOScreen(outputDirectory = outputDirectory, onError = {}, index = index)
+                ScannerBISINDOScreen(outputDirectory = outputDirectory, onError = {}, index = index, navigateToHome = {navController.navigate(Screen.Home.route)})
             }
             composable(route = Screen.LaporBug.route){
                 LaporBugScreen(onBackButtonPressed = {navController.navigate(Screen.LaporBug.route)})
@@ -210,6 +215,10 @@ fun JetReachYouApp(
             composable(route = Screen.DetailQuiz.route, arguments = listOf(navArgument("id"){type = NavType.IntType})){
                 val id = it.arguments?.getInt("id") ?: 0
                 DetailQuizScreen(type = id, navigateToQuiz = {navController.navigate(Screen.Quiz.route)})
+            }
+            composable(route = Screen.DetailNews.route, arguments = (listOf(navArgument("id"){type = NavType.IntType}))){
+                val id = it.arguments?.getInt("id")?: 0
+                DetailNewsScreen(idNews = id, navigateToNews = {navController.navigate(Screen.News.route)})
             }
         }
     }

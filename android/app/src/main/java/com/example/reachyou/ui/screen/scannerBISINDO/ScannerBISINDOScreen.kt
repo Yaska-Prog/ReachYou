@@ -53,6 +53,7 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import coil.compose.AsyncImage
 import com.example.reachyou.R
+import com.example.reachyou.ui.component.button.BackButton
 import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
@@ -68,7 +69,8 @@ fun ScannerBISINDOScreen(
     modifier: Modifier = Modifier,
     outputDirectory: File,
     onError: (ImageCaptureException) -> Unit,
-    index: Int
+    index: Int,
+    navigateToHome: () -> Unit
 ) {
     //0: BISINDO
     //1: Warna
@@ -78,7 +80,7 @@ fun ScannerBISINDOScreen(
         mutableIntStateOf(index)
     }
     val listIcon = listOf<Int>(R.drawable.scanner_bisindo, R.drawable.scanner_color, R.drawable.scanner_uang, R.drawable.scanner_objek)
-    val lensFacing = CameraSelector.LENS_FACING_BACK
+    val lensFacing = CameraSelector.LENS_FACING_FRONT
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val preview = Preview.Builder().build()
@@ -94,6 +96,9 @@ fun ScannerBISINDOScreen(
     BackHandler {
         if(selectedImageByUri != null){
             selectedImageByUri = null
+        }
+        else{
+            navigateToHome()
         }
     }
     var leftButtonIcon by rememberSaveable {
@@ -126,23 +131,27 @@ fun ScannerBISINDOScreen(
         }
 
         Box(contentAlignment = Alignment.BottomCenter,
-            modifier = Modifier.fillMaxSize()
-                .pointerInput(Unit){
+            modifier = Modifier
+                .fillMaxSize()
+                .pointerInput(Unit) {
                     detectDragGestures { change, dragAmount ->
-                        if(dragAmount.x < -350 && currentIndex <= 2){
+                        if (dragAmount.x < -350 && currentIndex <= 2) {
                             currentIndex += 1
-                            rightButtonIcon = if(currentIndex < 3) currentIndex + 1 else 10
-                            leftButtonIcon = if(currentIndex >= 1) currentIndex -1 else 10
+                            rightButtonIcon = if (currentIndex < 3) currentIndex + 1 else 10
+                            leftButtonIcon = if (currentIndex >= 1) currentIndex - 1 else 10
                         }
-                        if(dragAmount.x > 350 && currentIndex <= 3 && currentIndex > 0){
+                        if (dragAmount.x > 350 && currentIndex <= 3 && currentIndex > 0) {
                             currentIndex -= 1
-                            rightButtonIcon = if(currentIndex < 3) currentIndex + 1 else 10
-                            leftButtonIcon = if(currentIndex >= 1) currentIndex -1 else 10
+                            rightButtonIcon = if (currentIndex < 3) currentIndex + 1 else 10
+                            leftButtonIcon = if (currentIndex >= 1) currentIndex - 1 else 10
                         }
                     }
                 }
         ) {
             AndroidView({ previewView }, modifier = Modifier.fillMaxSize())
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopStart){
+                BackButton(onClick = navigateToHome, modifier = Modifier.padding(20.dp))
+            }
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopEnd){
                 IconButton(onClick = {
                     cameraSelector.value =

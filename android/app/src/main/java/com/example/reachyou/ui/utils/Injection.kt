@@ -5,6 +5,7 @@ import com.example.reachyou.data.local.SharedPreferenceManager
 import com.example.reachyou.data.local.database.QuestionRoomDatabase
 import com.example.reachyou.data.remote.retrofit.ApiConfig
 import com.example.reachyou.data.repository.AuthRepository
+import com.example.reachyou.data.repository.NewsRepository
 import com.example.reachyou.data.repository.QuizRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -22,5 +23,10 @@ object Injection {
         val database = QuestionRoomDatabase.getDatabase(context = context, applicationScope = applicationScope)
         val questionDao = database.questionDao()
         return QuizRepository.getInstance(apiService, questionDao)
+    }
+
+    fun provideNewsRepository(): NewsRepository{
+        val apiService = ApiConfig().getApiService()
+        return NewsRepository.getInstance(apiService)
     }
 }

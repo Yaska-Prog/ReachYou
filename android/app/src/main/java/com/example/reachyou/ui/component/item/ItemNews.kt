@@ -1,6 +1,7 @@
 package com.example.reachyou.ui.component.item
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,12 +25,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.reachyou.data.local.Article
 import com.example.reachyou.ui.component.utils.NewsType
 import com.example.reachyou.ui.theme.ReachYouTheme
 
 @Composable
 fun ItemNews(
-    modifier: Modifier = Modifier
+    news: Article,
+    navigateToDetail: (Int) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Card(
         colors = CardDefaults.cardColors(
@@ -43,10 +47,11 @@ fun ItemNews(
     ) {
         Row(
             modifier = modifier.padding(20.dp)
+                .clickable { navigateToDetail(news.id) }
         ) {
             AsyncImage(
-                model = "https://wallpaperaccess.com/full/685208.jpg",
-                contentDescription = "Wallpaper",
+                model = "https://imgv3.fotor.com/images/blog-cover-image/10-profile-picture-ideas-to-make-you-stand-out.jpg",
+                contentDescription = news.id.toString(),
                 contentScale = ContentScale.Crop,
                 modifier = modifier
                     .size(70.dp)
@@ -62,9 +67,9 @@ fun ItemNews(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     NewsType(isPositive = true)
-                    Text(text = "20 Mei 2023", style = MaterialTheme.typography.labelSmall)
+                    Text(text = news.createdAt, style = MaterialTheme.typography.labelSmall)
                 }
-                Text(text = "Apa itu disabilitas?", style = MaterialTheme.typography.bodyMedium)
+                Text(text = news.title, style = MaterialTheme.typography.bodyMedium)
                 Row(
                     modifier = modifier.padding(top = 5.dp),
                     horizontalArrangement = Arrangement.Center,
@@ -89,6 +94,6 @@ fun ItemNews(
 @Composable
 fun ItemNewsPreview() {
     ReachYouTheme {
-        ItemNews()
+//        ItemNews()
     }
 }

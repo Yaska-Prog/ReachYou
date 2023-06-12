@@ -66,7 +66,7 @@ fun CustomDialogQuiz(
                     Icon(imageVector = if(isSuccess) Icons.Default.Done else Icons.Default.Close, contentDescription = "Done Icon", modifier = modifier.size(40.dp), tint = Color.White)
                 }
                 Text(text = if(isSuccess) "Berhasil!" else "Gagal!", style = MaterialTheme.typography.headlineMedium, color = Color.Black)
-                Text(text = if(isSuccess) "Berhasil menyelesaikan quiz!" else "Gagal menyelesaikan quiz!", style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
+                Text(text = if(isSuccess) "Sukses memperbarui data!" else "Gagal memperbarui data!", style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
                 Button(onClick = onConfirm, shape = RoundedCornerShape(20.dp), modifier = modifier
                     .fillMaxWidth()
                     .padding(30.dp), colors = ButtonDefaults.buttonColors(

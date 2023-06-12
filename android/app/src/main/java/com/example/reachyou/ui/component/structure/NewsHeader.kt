@@ -1,5 +1,6 @@
 package com.example.reachyou.ui.component.structure
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,26 +19,30 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.reachyou.data.local.Article
 import com.example.reachyou.ui.component.utils.NewsType
 import com.example.reachyou.ui.theme.ReachYouTheme
 
 @Composable
 fun NewsHeader(
-    modifier: Modifier = Modifier
+    news: Article,
+    navigateToDetail: (Int) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.padding(20.dp)
+            .clickable { navigateToDetail(news.id) }
     ) {
         AsyncImage(
-            model = "https://wallpaperaccess.com/full/685208.jpg",
-            contentDescription = "Wallpaper",
+            model = "https://imgv3.fotor.com/images/blog-cover-image/10-profile-picture-ideas-to-make-you-stand-out.jpg",
+            contentDescription = "News ke ${news.id}",
             modifier = modifier
                 .fillMaxWidth()
                 .clip(shape = RoundedCornerShape(20.dp))
         )
         Spacer(modifier = modifier.height(10.dp))
         Text(
-            text = "Wallpaper ciamik untuk kaum disabilitas",
+            text = news.title,
             style = MaterialTheme.typography.headlineMedium
         )
         Row(
@@ -46,7 +51,7 @@ fun NewsHeader(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "10 Menit yang lalu",
+                text = news.createdAt,
                 textAlign = TextAlign.Start
             )
             NewsType(isPositive = true)
@@ -58,6 +63,6 @@ fun NewsHeader(
 @Composable
 fun NewsHeaderPreview() {
     ReachYouTheme {
-        NewsHeader()
+//        NewsHeader()
     }
 }
