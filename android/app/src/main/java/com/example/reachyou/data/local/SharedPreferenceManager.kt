@@ -11,6 +11,7 @@ class SharedPreferenceManager(context: Context) {
             .putString("username", user.username)
             .putString("email", user.email)
             .putString("id", user.id)
+            .putString("profile", user.profileUrl)
             .putInt("koin", user.koin)
             .apply()
     }
@@ -20,8 +21,9 @@ class SharedPreferenceManager(context: Context) {
         val email = sharedPreferences.getString("email", null)
         val id = sharedPreferences.getString("id", null)
         val coin = sharedPreferences.getInt("koin", 0)
+        val profile = sharedPreferences.getString("profile", null)
         return if(username != null && email != null){
-            UserModel(username, email, id as String, coin)
+            UserModel(username, email, id as String, coin, profile as String)
         } else{
             null
         }

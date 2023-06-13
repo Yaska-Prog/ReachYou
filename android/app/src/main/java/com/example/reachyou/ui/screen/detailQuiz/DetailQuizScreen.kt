@@ -60,7 +60,9 @@ fun DetailQuizScreen(
                 viewModel.onDismissDialog()
                 navigateToQuiz()
             },
-            isSuccess = viewModel.isSuccess
+            isSuccess = viewModel.isSuccess,
+            title = viewModel.title,
+            subtitle = viewModel.subtitle
         )
     }
     Column(

@@ -22,6 +22,8 @@ class LaporBugViewModel(private val authRepository: AuthRepository): ViewModel()
 
     var isDialogShown by mutableStateOf(false)
     var isSuccess by mutableStateOf(false)
+    var title by mutableStateOf("")
+    var subtitle by mutableStateOf("")
 
     fun laporBug(gambar: MultipartBody.Part, email: RequestBody, bug: RequestBody){
         viewModelScope.launch {
@@ -31,5 +33,9 @@ class LaporBugViewModel(private val authRepository: AuthRepository): ViewModel()
                 _uiState.value = result
             }
         }
+    }
+    fun dismissDialog(){
+        isDialogShown = false
+        _uiState.value = UiState.Idle
     }
 }

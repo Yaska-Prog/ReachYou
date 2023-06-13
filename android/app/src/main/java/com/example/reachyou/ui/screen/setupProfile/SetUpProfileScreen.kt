@@ -2,6 +2,7 @@ package com.example.reachyou.ui.screen.setupProfile
 
 import android.content.res.Configuration
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -45,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.reachyou.R
 import com.example.reachyou.ui.component.button.ActionButton
+import com.example.reachyou.ui.component.utils.CustomDialogQuiz
 import com.example.reachyou.ui.component.utils.MessageBox
 import com.example.reachyou.ui.theme.ReachYouTheme
 import com.example.reachyou.ui.utils.UiState
@@ -69,35 +71,27 @@ fun SetupProfileScreen(
         mutableStateOf("")
     }
     val uiState by viewModel.uiState.collectAsState()
-    var isSuccessMessagebox by rememberSaveable {
-        mutableStateOf(false)
-    }
-    var isFailedMessagebox by rememberSaveable {
-        mutableStateOf(false)
-    }
-    var message by rememberSaveable {
-        mutableStateOf("")
-    }
     var isLoading by rememberSaveable {
         mutableStateOf(false)
     }
     val context = LocalContext.current
-    if(isSuccessMessagebox){
-        MessageBox(title = "Sukses melakukan Set up profile!",
-            message = "Set up profile berhasil! Silahkan menuju ke halaman login!", onDismiss = {
-                isSuccessMessagebox = false
-                viewModel.updateUiState()
-                navigateToLogin()
-            })
-    }
-    if(isFailedMessagebox){
-        MessageBox(
-            title = "Gagal melakukan Set up profile!",
-            message = "Set up profile gagal! Cek kembali data yang ingin di kirimkan!",
+    if(viewModel.isDialogShown){
+        CustomDialogQuiz(
             onDismiss = {
-                isFailedMessagebox = false
-                viewModel.updateUiState()
-            }
+                viewModel.onDismissDialog()
+                if(viewModel.isSuccess){
+                    navigateToLogin()
+                }
+            },
+            onConfirm = {
+                viewModel.onDismissDialog()
+                if(viewModel.isSuccess){
+                    navigateToLogin()
+                }
+            },
+            isSuccess = viewModel.isSuccess,
+            title = viewModel.title,
+            subtitle = viewModel.subtitle
         )
     }
     Column(
@@ -175,11 +169,11 @@ fun SetupProfileScreen(
         Spacer(modifier = Modifier.height(32.dp))
         ActionButton(text = "Continue", onClick = {
             if(selectedImageByUri != null && username != ""){
-                val file = uriToFile(selectedImg = selectedImageByUri!!, context = context)
+                val file = uriToFile(selectedImg = selectedImageByUri as Uri, context = context)
                 val reducedFile = reduceFileImage(file)
                 val requestImageFile = reducedFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
                 val imageMultiPart : MultipartBody.Part = MultipartBody.Part.createFormData(
-                    "photo",
+                    "file",
                     file.name,
                     requestImageFile
                 )
@@ -187,7 +181,10 @@ fun SetupProfileScreen(
                 viewModel.setupProfile(usernameMultipart, imageMultiPart)
             }
             else{
-                isFailedMessagebox = true
+                viewModel.isSuccess = false
+                viewModel.title = "Gagal!"
+                viewModel.subtitle = "Gagal melakukan Set up profile, Tolong isikan data yang diperlukan"
+                viewModel.isDialogShown = true
             }
         }, isLoading = isLoading)
         when(uiState){
@@ -196,13 +193,17 @@ fun SetupProfileScreen(
             }
             is UiState.Success -> {
                 isLoading = false
-                isSuccessMessagebox = true
-                message = (uiState as UiState.Success<String>).data
+                viewModel.isSuccess = true
+                viewModel.title = "Sukses!"
+                viewModel.subtitle = "Sukses melakukan Set up profile! Silahkan kembali ke menu login."
+                viewModel.isDialogShown = true
             }
             is UiState.Error -> {
                 isLoading = false
-                isFailedMessagebox = true
-                message = (uiState as UiState.Error).errorMessage
+                viewModel.isSuccess = false
+                viewModel.title = "Gagal!"
+                viewModel.subtitle = "Gagal melakukan Set up profile, pesan kesalahan: ${(uiState as UiState.Error).errorMessage}"
+                viewModel.isDialogShown = true
             }
             else -> {
 

@@ -18,7 +18,8 @@ class BottomSheetViewModel(private val authRepository: AuthRepository): ViewMode
 
     var isDialogShown by mutableStateOf(false)
     var isPositive by mutableStateOf(false)
-
+    var title by mutableStateOf("")
+    var subtitle by mutableStateOf("")
     fun updateProfile(type:String, value: String) {
         viewModelScope.launch {
             authRepository.updateProfile(type, value)

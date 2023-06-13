@@ -74,6 +74,7 @@ fun JetReachYouApp(
     var selectedItem by remember {
         mutableIntStateOf(0)
     }
+    val user = sharedPreferenceManager.getUser()
     val bottomNavItem = listOf<BottomBarItem>(
         BottomBarItem("home", Icons.Default.Home, Screen.Home),
         BottomBarItem("news", ImageVector.vectorResource(id = R.drawable.newspaper_icon), Screen.News),
@@ -147,11 +148,11 @@ fun JetReachYouApp(
         }
         NavHost(
             navController = navController,
-            startDestination = if(sharedPreferenceManager.getUser() != null) Screen.Home.route else Screen.Landing.route,
+            startDestination = Screen.LaporBug.route,
             modifier = Modifier.padding(innerPadding)){
             composable(Screen.Landing.route){
                 LandingScreen(modifier = Modifier,
-                    navigateToLogin = {navController.navigate(Screen.Login.route)},
+                    navigateToLogin = {navController.navigate(Screen.SetupProfile.route)},
                     navigateToRegister = {navController.navigate(Screen.Register.route)})
             }
             composable(Screen.Login.route){
@@ -204,7 +205,7 @@ fun JetReachYouApp(
                 ScannerBISINDOScreen(outputDirectory = outputDirectory, onError = {}, index = index, navigateToHome = {navController.navigate(Screen.Home.route)})
             }
             composable(route = Screen.LaporBug.route){
-                LaporBugScreen(onBackButtonPressed = {navController.navigate(Screen.LaporBug.route)})
+                LaporBugScreen(onBackButtonPressed = {navController.navigate(Screen.Profile.route)})
             }
             composable(route = Screen.Quiz.route){
                 QuizScreen(navigateToDetailQuiz = {id ->

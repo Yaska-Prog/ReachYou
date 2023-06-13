@@ -29,6 +29,8 @@ class DetailQuizViewmodel(private val quizRepository: QuizRepository): ViewModel
 
     var isDialogShown by mutableStateOf(false)
     var isSuccess by mutableStateOf(false)
+    var title by mutableStateOf("")
+    var subtitle by mutableStateOf("")
 
     fun getListQuestion(type: Int){
         if(type == 1){
@@ -82,11 +84,15 @@ class DetailQuizViewmodel(private val quizRepository: QuizRepository): ViewModel
                         is UiState.Success -> {
                             _uiState.value = UiState.Idle
                             isSuccess = true
+                            title = "Sukses!"
+                            subtitle = "Berhasil menyelesaikan quiz!"
                             isDialogShown = true
                         }
                         is UiState.Error -> {
                             isSuccess = false
                             isDialogShown = true
+                            title = "Gagal!"
+                            subtitle = "Gagal menyelesaikan quiz!"
                         }
                         UiState.Loading -> {
                             _uiState.value = UiState.Loading

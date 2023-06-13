@@ -33,6 +33,7 @@ import com.example.reachyou.ui.component.button.ActionButton
 import com.example.reachyou.ui.component.textfield.EmailTextField
 import com.example.reachyou.ui.component.utils.MessageBox
 import com.example.reachyou.ui.component.textfield.PasswordTextField
+import com.example.reachyou.ui.component.utils.CustomDialogQuiz
 import com.example.reachyou.ui.theme.ReachYouTheme
 import com.example.reachyou.ui.utils.UiState
 import com.example.reachyou.ui.utils.ViewModelFactory
@@ -48,43 +49,35 @@ fun RegisterScreen(
     navigateToLogin: () -> Unit
 ) {
     var email by rememberSaveable {
-        mutableStateOf("Yaska@gmail.com")
-    }
-    var password by rememberSaveable {
-        mutableStateOf("secretpassword")
-    }
-    var reTypePassword by rememberSaveable {
-        mutableStateOf("secretpassword")
-    }
-    val uiState by viewModel.uiState.collectAsState()
-    var isSuccessMessagebox by rememberSaveable {
-        mutableStateOf(false)
-    }
-    var isFailedMessagebox by rememberSaveable {
-        mutableStateOf(false)
-    }
-    var message by rememberSaveable {
         mutableStateOf("")
     }
+    var password by rememberSaveable {
+        mutableStateOf("")
+    }
+    var reTypePassword by rememberSaveable {
+        mutableStateOf("")
+    }
+    val uiState by viewModel.uiState.collectAsState()
     var isLoading by rememberSaveable {
         mutableStateOf(false)
     }
-    if(isSuccessMessagebox){
-        MessageBox(title = "Sukses melakukan register!",
-            message = "Register berhasil! Silahkan menuju ke halaman login", onDismiss = {
-            isSuccessMessagebox = false
-            viewModel.updateUiState()
-            navigateToSetupProfile()
-        })
-    }
-    if(isFailedMessagebox){
-        MessageBox(
-            title = "Gagal melakukan register!",
-            message = "Register gagal! Cek kembali data yang ingin di kirimkan!",
+    if(viewModel.isDialogShown){
+        CustomDialogQuiz(
             onDismiss = {
-                isFailedMessagebox = false
-                viewModel.updateUiState()
-            }
+                viewModel.onDismissDialog()
+                if(viewModel.isSuccess){
+                    navigateToSetupProfile()
+                }
+            },
+            onConfirm = {
+                viewModel.onDismissDialog()
+                if(viewModel.isSuccess){
+                    navigateToSetupProfile()
+                }
+            },
+            isSuccess = viewModel.isSuccess,
+            title = viewModel.title,
+            subtitle = viewModel.subtitle
         )
     }
     Column(
@@ -122,8 +115,11 @@ fun RegisterScreen(
         Spacer(modifier = Modifier.height(24.dp))
         ActionButton(text = "Register",
             onClick = {
-                if(password != reTypePassword){
-                    isFailedMessagebox = true
+                if(password != reTypePassword || password == "" || email == ""){
+                    viewModel.isSuccess = false
+                    viewModel.isDialogShown = true
+                    viewModel.title = "Gagal!"
+                    viewModel.subtitle = "Isi data yang diperlukan terlebih dahulu!"
                 }
                 else{
                     viewModel.register(email, password)
@@ -141,13 +137,17 @@ fun RegisterScreen(
             }
             is UiState.Success -> {
                 isLoading = false
-                isSuccessMessagebox = true
-                message = (uiState as UiState.Success<String>).data
+                viewModel.isSuccess = true
+                viewModel.title = "Sukses!"
+                viewModel.subtitle = "Sukses melakukan Register! Silahkan menuju halaman setup profile."
+                viewModel.isDialogShown = true
             }
             is UiState.Error -> {
                 isLoading = false
-                isFailedMessagebox = true
-                message = (uiState as UiState.Error).errorMessage
+                viewModel.isSuccess = false
+                viewModel.title = "Gagal!"
+                viewModel.subtitle = "Gagal melakukan Register, pesan kesalahan: ${(uiState as UiState.Error).errorMessage}"
+                viewModel.isDialogShown = true
             }
             else -> {
 

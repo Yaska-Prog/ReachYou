@@ -1,5 +1,8 @@
 package com.example.reachyou.ui.screen.login
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.reachyou.data.repository.AuthRepository
@@ -18,6 +21,11 @@ class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
     private val _uiState = MutableStateFlow<UiState<UserModel>>(UiState.Idle)
     val uiState: StateFlow<UiState<UserModel>> = _uiState
 
+    var isDialogShown by mutableStateOf(false)
+    var isSuccess by mutableStateOf(false)
+    var title by mutableStateOf("")
+    var subtitle by mutableStateOf("")
+
     fun login(username: String, password: String) {
         viewModelScope.launch{
             authRepository.login(username, password)
@@ -26,7 +34,8 @@ class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
         }
     }
 
-    fun updateUiState(){
+    fun onDismissDialog(){
+        isDialogShown = false
         _uiState.value = UiState.Idle
     }
 }

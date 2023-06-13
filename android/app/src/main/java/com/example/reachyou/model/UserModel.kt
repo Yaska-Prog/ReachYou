@@ -7,5 +7,6 @@ data class UserModel(
     var username: String,
     var email: String,
     var id: String,
-    var koin: Int
+    var koin: Int,
+    var profileUrl: String
 )

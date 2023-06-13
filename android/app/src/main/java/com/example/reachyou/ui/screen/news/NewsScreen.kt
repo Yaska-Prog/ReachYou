@@ -48,7 +48,9 @@ fun NewsScreen(
         CustomDialogQuiz(
             onDismiss = { viewModel.dismissDialog() },
             onConfirm = { viewModel.dismissDialog() },
-            isSuccess = false
+            isSuccess = false,
+            title = "Gagal!",
+            subtitle = "Gagal memperbarui data quiz!"
         )
     }
     when (uiState){

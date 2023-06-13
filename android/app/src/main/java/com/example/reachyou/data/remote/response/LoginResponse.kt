@@ -14,5 +14,8 @@ data class LoginResponse(
 	val username: String,
 
 	@field:SerializedName("point")
-	val point: Int
+	val point: Int,
+
+	@field:SerializedName("url")
+	val url: String
 )

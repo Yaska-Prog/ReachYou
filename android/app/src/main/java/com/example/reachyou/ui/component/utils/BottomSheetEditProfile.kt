@@ -56,7 +56,9 @@ fun BottomSheetEditProfile(
             dismissBottomSheet()
             viewModel.updateUi()
         },
-            isSuccess = viewModel.isPositive)
+            isSuccess = viewModel.isPositive,
+        title = viewModel.title,
+        subtitle = viewModel.subtitle)
     }
     when(uiState){
         is UiState.Loading -> {
@@ -82,10 +84,12 @@ fun BottomSheetEditProfile(
                 sharedPreferenceManager.saveUser(user)
             }
             viewModel.isPositive = true
+            viewModel.title = "Berhasil melakukan edit $type"
             viewModel.showDialog()
         }
         is UiState.Error -> {
             viewModel.isPositive = false
+            viewModel.title = "Gagal melakukan edit $type"
             viewModel.showDialog()
         }
 

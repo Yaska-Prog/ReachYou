@@ -49,7 +49,9 @@ fun DetailNewsScreen(
         CustomDialogQuiz(
             onDismiss = { viewModel.dismissDialog() },
             onConfirm = { viewModel.dismissDialog() },
-            isSuccess = false
+            isSuccess = false,
+            subtitle = "Gagal melakukan pembaruan data",
+            title = "Gagal!"
         )
     }
     when(uiState){

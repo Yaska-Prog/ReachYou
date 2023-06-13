@@ -6,8 +6,10 @@ import com.example.reachyou.data.remote.retrofit.ApiService
 import com.example.reachyou.model.UserModel
 import com.example.reachyou.ui.utils.UiState
 import kotlinx.coroutines.flow.flow
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.lang.Exception
 
 class AuthRepository(private val apiService: ApiService, private val sharedPreferenceManager: SharedPreferenceManager) {
@@ -17,7 +19,7 @@ class AuthRepository(private val apiService: ApiService, private val sharedPrefe
             val client = apiService.loginUser(username, password)
             if(client.isSuccessful && client.body() != null){
                 val responseBody = client.body()
-                val user = responseBody?.let { UserModel(username, it.email, it.uuid, it.point) }
+                val user = responseBody?.let { UserModel(username, it.email, it.uuid, it.point, it.url) }
                 emit(UiState.Success(user as UserModel))
             }
             else{
@@ -34,7 +36,9 @@ class AuthRepository(private val apiService: ApiService, private val sharedPrefe
             val client = apiService.regisUser(email, password)
             if(client.isSuccessful && client.body() != null){
                 val responseBody = client.body()
-                emit(UiState.Success(responseBody!!.msg))
+                val user = UserModel(id = responseBody!!.uuid, username = "", email = "", koin = 0, profileUrl = "")
+                sharedPreferenceManager.saveUser(user)
+                emit(UiState.Success(responseBody.msg))
             }
             else{
                 emit(UiState.Error("Gagal melakukan register! Email sudah digunakan"))
@@ -46,7 +50,8 @@ class AuthRepository(private val apiService: ApiService, private val sharedPrefe
     }
     fun setUpProfile(username: RequestBody, profilePicture: MultipartBody.Part) = flow{
         try {
-            val client = apiService.setupProfile(profilePicture, username)
+            val user = sharedPreferenceManager.getUser()!!.id
+            val client = apiService.setupProfile(user, profilePicture, username)
             if(client.isSuccessful && client.body() != null){
                 val responseBody = client.body()
                 emit(UiState.Success(responseBody!!.msg))

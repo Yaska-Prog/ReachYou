@@ -3,7 +3,9 @@ package com.example.reachyou.data.remote.retrofit
 import com.example.reachyou.data.remote.response.ArticleResponse
 import com.example.reachyou.data.remote.response.ArticleResponseItem
 import com.example.reachyou.data.remote.response.LoginResponse
+import com.example.reachyou.data.remote.response.RegisterMainResponse
 import com.example.reachyou.data.remote.response.RegisterResponse
+import com.example.reachyou.data.remote.response.SetupProfileResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -30,14 +32,9 @@ interface ApiService {
     suspend fun regisUser(
         @Field("email") email: String,
         @Field("password") password: String
-    ): Response<RegisterResponse>
+    ): Response<RegisterMainResponse>
 
-    @Multipart
-    @PATCH("profil/{id}")
-    suspend fun setupProfile(
-        @Part file: MultipartBody.Part,
-        @Part("username") username: RequestBody
-    ): Response<RegisterResponse>
+
 
     @FormUrlEncoded
     @PATCH("/tambahpoint/{id}")
@@ -68,4 +65,12 @@ interface ApiService {
         @Part("email") email: RequestBody,
         @Part("bug") bug: RequestBody
     ): Response<RegisterResponse>
+
+    @Multipart
+    @PATCH("/setup/{id}")
+    suspend fun setupProfile(
+        @Path("id") id: String,
+        @Part file: MultipartBody.Part,
+        @Part("username") username: RequestBody
+    ): Response<SetupProfileResponse>
 }

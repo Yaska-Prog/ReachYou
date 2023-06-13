@@ -1,5 +1,8 @@
 package com.example.reachyou.ui.screen.register
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.reachyou.data.repository.AuthRepository
@@ -14,6 +17,11 @@ class RegisterViewmodel(private val authRepository: AuthRepository): ViewModel()
     private val _uiState = MutableStateFlow<UiState<String>>(UiState.Idle)
     val uiState: StateFlow<UiState<String>> = _uiState
 
+    var isDialogShown by mutableStateOf(false)
+    var isSuccess by mutableStateOf(false)
+    var title by mutableStateOf("")
+    var subtitle by mutableStateOf("")
+
     fun register(email: String, password: String){
         viewModelScope.launch {
             authRepository.register(email, password)
@@ -21,7 +29,8 @@ class RegisterViewmodel(private val authRepository: AuthRepository): ViewModel()
                 .collect{result -> _uiState.value = result}
         }
     }
-    fun updateUiState(){
+    fun onDismissDialog(){
+        isDialogShown = false
         _uiState.value = UiState.Idle
     }
 }

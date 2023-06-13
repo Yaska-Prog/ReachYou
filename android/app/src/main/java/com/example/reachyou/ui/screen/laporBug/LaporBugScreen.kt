@@ -27,6 +27,7 @@ import com.example.reachyou.ui.component.button.BackButton
 import com.example.reachyou.ui.theme.ReachYouTheme
 import com.example.reachyou.ui.component.inputBox.InputBox
 import com.example.reachyou.ui.component.inputBox.UploadBox
+import com.example.reachyou.ui.component.utils.CustomDialogQuiz
 import com.example.reachyou.ui.utils.UiState
 import com.example.reachyou.ui.utils.ViewModelFactory
 import com.example.reachyou.ui.utils.reduceFileImage
@@ -63,17 +64,35 @@ fun LaporBugScreen(
         mutableStateOf("")
     }
 
+    if(viewModel.isDialogShown){
+        CustomDialogQuiz(
+            title = viewModel.title,
+            subtitle = viewModel.subtitle,
+            onDismiss = {
+              viewModel.dismissDialog()
+                onBackButtonPressed()
+            },
+            onConfirm = {
+                onBackButtonPressed()
+            },
+            isSuccess = viewModel.isSuccess
+        )
+    }
     when(uiState){
         is UiState.Loading -> {
             isLoading = true
         }
         is UiState.Success -> {
             isLoading = false
+            viewModel.title = "Sukses"
+            viewModel.subtitle = "Sukses melaporkan bug! Terima kasih banyak atas masukannya"
             viewModel.isSuccess = true
             viewModel.isDialogShown = true
         }
         is UiState.Error -> {
             isLoading = false
+            viewModel.title = "Gagal"
+            viewModel.subtitle = "Gagal melaporkan bug! Pesan error: ${(uiState as UiState.Error).errorMessage}"
             viewModel.isSuccess = false
             viewModel.isDialogShown = true
         }

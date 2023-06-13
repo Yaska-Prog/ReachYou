@@ -42,6 +42,7 @@ import com.example.reachyou.model.UserModel
 import com.example.reachyou.ui.utils.ViewModelFactory
 import com.example.reachyou.ui.component.utils.MessageBox
 import com.example.reachyou.ui.component.textfield.PasswordTextField
+import com.example.reachyou.ui.component.utils.CustomDialogQuiz
 import com.example.reachyou.ui.theme.ReachYouTheme
 import com.example.reachyou.ui.utils.UiState
 
@@ -65,30 +66,24 @@ fun LoginScreen(
         mutableStateOf(false)
     }
     val uiState by viewModel.uiState.collectAsState()
-    var isSuccessMessagebox by rememberSaveable {
-        mutableStateOf(false)
-    }
-    var isFailedMessagebox by rememberSaveable {
-        mutableStateOf(false)
-    }
-    var message by rememberSaveable {
-        mutableStateOf("")
-    }
-    if(isSuccessMessagebox){
-        MessageBox(title = "Sukses melakukan login!", message = "Silahkan menuju ke halaman home", onDismiss = {
-            isSuccessMessagebox = false
-            viewModel.updateUiState()
-            navigateToHome()
-        })
-    }
-    if(isFailedMessagebox){
-        MessageBox(
-            title = "Gagal melakukan login!",
-            message = "Login gagal! Tolong lakukan login kembali!",
+
+    if(viewModel.isDialogShown){
+        CustomDialogQuiz(
             onDismiss = {
-                isFailedMessagebox = false
-                viewModel.updateUiState()
-            }
+                viewModel.onDismissDialog()
+                if(viewModel.isSuccess){
+                    navigateToHome()
+                }
+            },
+            onConfirm = {
+                viewModel.onDismissDialog()
+                if(viewModel.isSuccess){
+                    navigateToHome()
+                }
+            },
+            isSuccess = viewModel.isSuccess,
+            title = viewModel.title,
+            subtitle = viewModel.subtitle
         )
     }
     Column(
@@ -140,7 +135,15 @@ fun LoginScreen(
         )
         PasswordTextField(input = password, onValueChange = {password = it}, label = "Password")
         ActionButton(text = "Login", onClick = {
-            viewModel.login(username, password)
+            if(password == "" || username == ""){
+                viewModel.isSuccess = false
+                viewModel.isDialogShown = true
+                viewModel.title = "Gagal!"
+                viewModel.subtitle = "Isi data yang diperlukan terlebih dahulu!"
+            }
+            else{
+                viewModel.login(username, password)
+            }
         }, isLoading = isLoading)
         Text(
             text = "Belum memiliki akun? Daftarkan diri anda disini!",
@@ -153,17 +156,19 @@ fun LoginScreen(
             }
             is UiState.Success -> {
                 isLoading = false
-                isSuccessMessagebox = true
-                message = "Berhasil Login"
-
                 val user = (uiState as UiState.Success<UserModel>).data
                 sharedPreferenceManager.saveUser(user = user)
-                navigateToHome()
+                viewModel.isSuccess = true
+                viewModel.title = "Sukses!"
+                viewModel.subtitle = "Sukses melakukan login! Silahkan menikmati aplikasi kami."
+                viewModel.isDialogShown = true
             }
             is UiState.Error -> {
                 isLoading = false
-                isFailedMessagebox = true
-                message = (uiState as UiState.Error).errorMessage
+                viewModel.isSuccess = false
+                viewModel.title = "Gagal!"
+                viewModel.subtitle = "Gagal melakukan login, pesan kesalahan: ${(uiState as UiState.Error).errorMessage}"
+                viewModel.isDialogShown = true
             }
             else -> {
 
