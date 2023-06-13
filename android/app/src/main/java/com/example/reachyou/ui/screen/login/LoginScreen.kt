@@ -102,7 +102,6 @@ fun LoginScreen(
                     )
                 )
             ),
-        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(painter = painterResource(

@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -36,6 +37,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.reachyou.data.local.SharedPreferenceManager
 import com.example.reachyou.model.BottomBarItem
 import com.example.reachyou.ui.component.utils.BottomSheetEditProfile
 import com.example.reachyou.ui.navigation.Screen
@@ -59,19 +61,14 @@ import java.io.File
 @Composable
 fun JetReachYouApp(
     navController: NavHostController = rememberNavController(),
-    outputDirectory: File
+    outputDirectory: File,
+    sharedPreferenceManager: SharedPreferenceManager = SharedPreferenceManager(LocalContext.current)
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
     var typeEdit by rememberSaveable{
-        mutableStateOf("")
-    }
-    var isLoading by rememberSaveable {
-        mutableStateOf(false)
-    }
-    var inputEditProfile by rememberSaveable {
         mutableStateOf("")
     }
     var selectedItem by remember {
@@ -140,16 +137,17 @@ fun JetReachYouApp(
             }) {
                 BottomSheetEditProfile(
                     type = typeEdit,
-                    onClick = {},
-                    onValueChange = {text -> inputEditProfile = text},
-                    input = inputEditProfile,
-                    isLoading = isLoading
+                    dismissBottomSheet = {
+                        scope.launch {
+                            sheetState.hide()
+                        }
+                    }
                 )
             }
         }
         NavHost(
             navController = navController,
-            startDestination = Screen.Home.route,
+            startDestination = if(sharedPreferenceManager.getUser() != null) Screen.Home.route else Screen.Landing.route,
             modifier = Modifier.padding(innerPadding)){
             composable(Screen.Landing.route){
                 LandingScreen(modifier = Modifier,
@@ -187,7 +185,8 @@ fun JetReachYouApp(
                             sheetState.show()
                         }
                     },
-                    navigateToLaporBug = {navController.navigate(Screen.LaporBug.route)}
+                    navigateToLaporBug = {navController.navigate(Screen.LaporBug.route)},
+                    navigateToLanding = {navController.navigate(Screen.Landing.route)}
                 )
             }
             composable(Screen.CreateNews.route){

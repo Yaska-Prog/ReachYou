@@ -17,19 +17,80 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.reachyou.data.local.SharedPreferenceManager
+import com.example.reachyou.ui.utils.UiState
+import com.example.reachyou.ui.utils.ViewModelFactory
 
 @Composable
 fun BottomSheetEditProfile(
     type: String,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    onValueChange: (String) -> Unit,
-    input: String,
-    isLoading: Boolean
+    dismissBottomSheet: () -> Unit,
+    viewModel: BottomSheetViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = ViewModelFactory.getUserInstance(
+        LocalContext.current
+    )),
+    sharedPreferenceManager: SharedPreferenceManager = SharedPreferenceManager(LocalContext.current)
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+    var inputEditProfile by rememberSaveable {
+        mutableStateOf("")
+    }
+    if(viewModel.isDialogShown){
+        CustomDialogQuiz(onDismiss = {
+            viewModel.dismissDialog()
+            dismissBottomSheet()
+            viewModel.updateUi()
+            }, onConfirm = {
+            viewModel.dismissDialog()
+            dismissBottomSheet()
+            viewModel.updateUi()
+        },
+            isSuccess = viewModel.isPositive)
+    }
+    when(uiState){
+        is UiState.Loading -> {
+            Box(
+                contentAlignment = Alignment.TopCenter,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                CircularProgressIndicator(
+                    color = Color.Blue,
+                    strokeWidth = 4.dp,
+                    modifier = Modifier.size(48.dp)
+                )
+            }
+        }
+        is UiState.Success -> {
+            val user = sharedPreferenceManager.getUser()
+            if(type == "Username"){
+                user!!.username = inputEditProfile
+                sharedPreferenceManager.saveUser(user)
+            }
+            else if (type == "Email"){
+                user!!.email = inputEditProfile
+                sharedPreferenceManager.saveUser(user)
+            }
+            viewModel.isPositive = true
+            viewModel.showDialog()
+        }
+        is UiState.Error -> {
+            viewModel.isPositive = false
+            viewModel.showDialog()
+        }
+
+        else -> {}
+    }
     Box(modifier = modifier
         .height(185.dp)
         .fillMaxWidth()){
@@ -38,15 +99,17 @@ fun BottomSheetEditProfile(
             Text(text = "Edit $type",
                 modifier = modifier.padding(start = 16.dp, end = 16.dp),
                 style = MaterialTheme.typography.headlineMedium)
-            OutlinedTextField(value = input,
-                onValueChange = onValueChange,
+            OutlinedTextField(value = inputEditProfile,
+                onValueChange = {inputEditProfile = it},
                 label = { Text(text = type, style = MaterialTheme.typography.bodyMedium)},
                 shape = RoundedCornerShape(8.dp),
             modifier = modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp))
             Button(
-                onClick = onClick,
+                onClick = {
+                    viewModel.updateProfile(type, inputEditProfile)
+                },
                 enabled = true,
                 shape = RoundedCornerShape(8.dp),
                 modifier = modifier
@@ -54,17 +117,12 @@ fun BottomSheetEditProfile(
                     .height(45.dp)
                     .padding(start = 16.dp, end = 16.dp, bottom = 3.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = androidx.compose.ui.graphics.Color(android.graphics.Color.parseColor("#FFDB58")),
-                    contentColor = androidx.compose.ui.graphics.Color.Black
+                    containerColor = Color(android.graphics.Color.parseColor("#FFDB58")),
+                    contentColor = Color.Black
                 )
             )
             {
-                if(isLoading){
-                    CircularProgressIndicator(modifier = modifier.size(16.dp))
-                }
-                else{
-                    Text(text = "Edit!", style = MaterialTheme.typography.bodyMedium)
-                }
+                Text(text = "Edit!", style = MaterialTheme.typography.bodyMedium)
             }
         }
     }
@@ -73,11 +131,5 @@ fun BottomSheetEditProfile(
 @Preview(showBackground = true)
 @Composable
 fun BottomSheetPreview() {
-    BottomSheetEditProfile(
-        type = "Username",
-        onClick = { /*TODO*/ },
-        onValueChange = { username -> },
-        input = "",
-        isLoading = false
-    )
+
 }

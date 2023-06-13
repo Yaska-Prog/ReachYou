@@ -12,20 +12,11 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
-import androidx.compose.foundation.gestures.draggable
-import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.sharp.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -49,16 +40,16 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import coil.compose.AsyncImage
 import com.example.reachyou.R
 import com.example.reachyou.ui.component.button.BackButton
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
-import java.util.Objects
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import kotlin.coroutines.resume
@@ -129,18 +120,26 @@ fun ScannerBISINDOScreen(
 
             preview.setSurfaceProvider(previewView.surfaceProvider)
         }
-
+        takePhoto(
+            filenameFormat = "yyyy-MM-dd-HH-mm-ss-SSS",
+            imageCapture = imageCapture,
+            outputDirectory = outputDirectory,
+            executor = executor,
+            onImageCaptured = {uri ->
+            },
+            onError = onError
+        )
         Box(contentAlignment = Alignment.BottomCenter,
             modifier = Modifier
                 .fillMaxSize()
                 .pointerInput(Unit) {
                     detectDragGestures { change, dragAmount ->
-                        if (dragAmount.x < -350 && currentIndex <= 2) {
+                        if (dragAmount.x < -80 && currentIndex <= 2) {
                             currentIndex += 1
                             rightButtonIcon = if (currentIndex < 3) currentIndex + 1 else 10
                             leftButtonIcon = if (currentIndex >= 1) currentIndex - 1 else 10
                         }
-                        if (dragAmount.x > 350 && currentIndex <= 3 && currentIndex > 0) {
+                        if (dragAmount.x > 80 && currentIndex <= 3 && currentIndex > 0) {
                             currentIndex -= 1
                             rightButtonIcon = if (currentIndex < 3) currentIndex + 1 else 10
                             leftButtonIcon = if (currentIndex >= 1) currentIndex - 1 else 10

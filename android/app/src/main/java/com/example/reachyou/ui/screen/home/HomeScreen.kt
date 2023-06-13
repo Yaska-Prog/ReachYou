@@ -18,7 +18,7 @@ fun HomeScreen(
 ) {
     Column {
         val shared = sharedPreferenceManager.getUser()
-        TopHomeBar(username = shared!!.usernname)
+        TopHomeBar(username = shared!!.username, coin = shared.koin)
         BodyHome(navigateToScanner = navigateToScanner)
     }
 }

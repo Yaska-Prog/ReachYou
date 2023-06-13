@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.reachyou.data.repository.AuthRepository
 import com.example.reachyou.data.repository.NewsRepository
 import com.example.reachyou.data.repository.QuizRepository
+import com.example.reachyou.ui.component.utils.BottomSheetViewModel
 import com.example.reachyou.ui.screen.detailNews.DetailNewsViewModel
 import com.example.reachyou.ui.screen.detailQuiz.DetailQuizViewmodel
 import com.example.reachyou.ui.screen.login.LoginViewModel
@@ -34,6 +35,9 @@ class ViewModelFactory(private val authRepository: AuthRepository? = null, priva
         else if(modelClass.isAssignableFrom(DetailNewsViewModel::class.java)){
             return DetailNewsViewModel(newsRepository as NewsRepository) as T
         }
+        else if(modelClass.isAssignableFrom(BottomSheetViewModel::class.java)){
+            return BottomSheetViewModel(authRepository as AuthRepository) as T
+        }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }
 
@@ -43,7 +47,7 @@ class ViewModelFactory(private val authRepository: AuthRepository? = null, priva
 
         fun getUserInstance(context: Context): ViewModelFactory =
             instance ?: synchronized(this){
-                instance ?: ViewModelFactory(authRepository = Injection.provideAuthRepository())
+                instance ?: ViewModelFactory(authRepository = Injection.provideAuthRepository(context))
             }.also { instance = it }
 
         private var quizInstance: ViewModelFactory? = null

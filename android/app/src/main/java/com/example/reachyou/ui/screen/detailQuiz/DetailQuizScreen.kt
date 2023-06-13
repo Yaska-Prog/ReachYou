@@ -1,5 +1,6 @@
 package com.example.reachyou.ui.screen.detailQuiz
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -132,7 +133,11 @@ fun DetailQuizScreen(
                     )
                 }
                 val user = sharedPreferenceManager.getUser()
-                viewModel.finishQUiz(user!!.id)
+                user!!.koin = viewModel.coin
+                sharedPreferenceManager.saveUser(user)
+                val user1 = sharedPreferenceManager.getUser()
+                Log.d("userKoin", "${user1!!.username} - ${user1.koin}")
+                viewModel.finishQuiz(user.id)
             }
 
             else -> {}

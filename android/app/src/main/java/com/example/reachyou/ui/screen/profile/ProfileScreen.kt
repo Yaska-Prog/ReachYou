@@ -15,12 +15,13 @@ import com.example.reachyou.ui.theme.ReachYouTheme
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     openModalBottomSheet: (String) -> Unit,
-    navigateToLaporBug: () -> Unit
+    navigateToLaporBug: () -> Unit,
+    navigateToLanding: () -> Unit
 ) {
     Column {
         TopProfileSection()
         Divider(thickness = 1.dp, color = Color.Black.copy(alpha = 0.5f))
-        ProfileBody(openModalBottomSheet = openModalBottomSheet, navigateToLaporBug = navigateToLaporBug)
+        ProfileBody(openModalBottomSheet = openModalBottomSheet, navigateToLaporBug = navigateToLaporBug, navigateToLanding = navigateToLanding)
     }
 }
 

@@ -28,7 +28,8 @@ import com.example.reachyou.ui.theme.ReachYouTheme
 @Composable
 fun TopHomeBar(
     modifier: Modifier = Modifier,
-    username: String
+    username: String,
+    coin: Int
 ) {
     Box(
         modifier = modifier
@@ -58,7 +59,7 @@ fun TopHomeBar(
                 )
                 Column {
                     Text(text = "Selamat datang, $username", style = MaterialTheme.typography.titleLarge, color = Color.White)
-                    CoinStatus(coin = "70")
+                    CoinStatus(coin = "$coin")
                     Spacer(modifier = modifier.height(15.dp))
                     Text(text = "Selamat Pagi", style = MaterialTheme.typography.titleLarge, color = Color.White)
                     Text(
@@ -76,6 +77,6 @@ fun TopHomeBar(
 @Composable
 fun TopHomeBarPreview() {
     ReachYouTheme {
-        TopHomeBar(username = "Yaska")
+        TopHomeBar(username = "Yaska", coin = 0)
     }
 }

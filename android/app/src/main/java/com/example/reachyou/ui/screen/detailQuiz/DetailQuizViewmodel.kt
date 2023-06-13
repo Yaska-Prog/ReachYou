@@ -21,6 +21,7 @@ class DetailQuizViewmodel(private val quizRepository: QuizRepository): ViewModel
     var currentQuestionIndex: Int = 0
     var totalCorrectAnswer: Int = 0
     private var coinMultiplier: Int = 0
+    var coin: Int = 0
 
     private val _uiState = MutableStateFlow<UiState<Question>>(UiState.Idle)
     val uiState: StateFlow<UiState<Question>> = _uiState
@@ -62,6 +63,7 @@ class DetailQuizViewmodel(private val quizRepository: QuizRepository): ViewModel
     fun answerQuestion(answer: String){
         if(answer == listQuiz[currentQuestionIndex].jawaban_benar){
             totalCorrectAnswer++
+            coin += coinMultiplier
         }
         if(currentQuestionIndex < listQuiz.size - 1){
             currentQuestionIndex++
@@ -71,8 +73,7 @@ class DetailQuizViewmodel(private val quizRepository: QuizRepository): ViewModel
             _uiState.value = UiState.Finish
         }
     }
-    fun finishQUiz(userId: String){
-        val coin = coinMultiplier * totalCorrectAnswer
+    fun finishQuiz(userId: String){
         viewModelScope.launch {
             quizRepository.finishQuiz(userId = userId, coin = coin)
                 .onStart { _uiState.value = UiState.Loading }

@@ -11,9 +11,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 
 object Injection {
-    fun provideAuthRepository(): AuthRepository{
+    fun provideAuthRepository(context: Context): AuthRepository{
+        val sharedPref = SharedPreferenceManager(context)
         val apiService = ApiConfig().getApiService()
-        return AuthRepository.getInstance(apiService)
+        return AuthRepository.getInstance(apiService, sharedPref)
     }
 
     fun provideQuizRepository(context: Context): QuizRepository{

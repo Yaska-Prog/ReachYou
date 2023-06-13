@@ -8,9 +8,10 @@ class SharedPreferenceManager(context: Context) {
 
     fun saveUser(user: UserModel){
         sharedPreferences.edit()
-            .putString("username", user.usernname)
+            .putString("username", user.username)
             .putString("email", user.email)
             .putString("id", user.id)
+            .putInt("koin", user.koin)
             .apply()
     }
 
@@ -18,14 +19,15 @@ class SharedPreferenceManager(context: Context) {
         val username = sharedPreferences.getString("username", null)
         val email = sharedPreferences.getString("email", null)
         val id = sharedPreferences.getString("id", null)
+        val coin = sharedPreferences.getInt("koin", 0)
         return if(username != null && email != null){
-            UserModel(username, email, id as String)
+            UserModel(username, email, id as String, coin)
         } else{
             null
         }
     }
 
-    fun clear(){
+    fun logout(){
         sharedPreferences.edit().clear().apply()
     }
 }

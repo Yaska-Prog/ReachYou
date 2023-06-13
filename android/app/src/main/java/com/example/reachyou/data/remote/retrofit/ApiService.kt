@@ -43,7 +43,7 @@ interface ApiService {
     @PATCH("/tambahpoint/{id}")
     suspend fun updateCoin(
         @Path("id") id: String,
-        @Field("coin") coin: Int
+        @Field("newPoint") coin: Int
     ): Response<RegisterResponse>
 
     @GET("article")
@@ -53,4 +53,11 @@ interface ApiService {
     suspend fun getDetailArticle(
         @Path("id") id: Int
     ): Response<ArticleResponseItem>
+
+    @FormUrlEncoded
+    @PATCH("/updateusername/{id}")
+    suspend fun updateUsername(
+        @Path("id") uuid: String,
+        @Field("username") username: String
+    ): Response<RegisterResponse>
 }
