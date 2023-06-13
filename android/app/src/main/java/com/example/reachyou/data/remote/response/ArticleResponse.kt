@@ -10,7 +10,7 @@ data class ArticleResponse(
 
 data class ArticleResponseItem(
 
-	@field:SerializedName("image")
+	@field:SerializedName("url")
 	val image: String,
 
 	@field:SerializedName("createdAt")

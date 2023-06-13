@@ -79,6 +79,22 @@ class AuthRepository(private val apiService: ApiService, private val sharedPrefe
         }
     }
 
+    fun laporBug(gambar: MultipartBody.Part, email: RequestBody, bug: RequestBody) = flow{
+        emit(UiState.Loading)
+        try {
+            val client = apiService.laporBug(gambar, email, bug)
+            if(client.isSuccessful && client.body() != null){
+                val responseBody = client.body()
+                emit(UiState.Success(responseBody!!.msg))
+            }
+            else{
+                emit(UiState.Error(client.errorBody().toString()))
+            }
+        } catch (e: Exception){
+            emit(UiState.Error(e.message.toString()))
+        }
+    }
+
     companion object{
         @Volatile
         private var instance: AuthRepository? = null

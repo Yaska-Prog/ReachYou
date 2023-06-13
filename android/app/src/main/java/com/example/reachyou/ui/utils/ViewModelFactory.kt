@@ -9,6 +9,7 @@ import com.example.reachyou.data.repository.QuizRepository
 import com.example.reachyou.ui.component.utils.BottomSheetViewModel
 import com.example.reachyou.ui.screen.detailNews.DetailNewsViewModel
 import com.example.reachyou.ui.screen.detailQuiz.DetailQuizViewmodel
+import com.example.reachyou.ui.screen.laporBug.LaporBugViewModel
 import com.example.reachyou.ui.screen.login.LoginViewModel
 import com.example.reachyou.ui.screen.news.NewsViewModel
 import com.example.reachyou.ui.screen.register.RegisterViewmodel
@@ -37,6 +38,9 @@ class ViewModelFactory(private val authRepository: AuthRepository? = null, priva
         }
         else if(modelClass.isAssignableFrom(BottomSheetViewModel::class.java)){
             return BottomSheetViewModel(authRepository as AuthRepository) as T
+        }
+        else if(modelClass.isAssignableFrom(LaporBugViewModel::class.java)){
+            return LaporBugViewModel(authRepository as AuthRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }

@@ -33,7 +33,7 @@ interface ApiService {
     ): Response<RegisterResponse>
 
     @Multipart
-    @POST("setupProfile")
+    @PATCH("profil/{id}")
     suspend fun setupProfile(
         @Part file: MultipartBody.Part,
         @Part("username") username: RequestBody
@@ -59,5 +59,13 @@ interface ApiService {
     suspend fun updateUsername(
         @Path("id") uuid: String,
         @Field("username") username: String
+    ): Response<RegisterResponse>
+
+    @Multipart
+    @POST("/bug")
+    suspend fun laporBug(
+        @Part file: MultipartBody.Part,
+        @Part("email") email: RequestBody,
+        @Part("bug") bug: RequestBody
     ): Response<RegisterResponse>
 }

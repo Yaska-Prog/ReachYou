@@ -12,12 +12,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.reachyou.ui.component.button.ActionButton
@@ -25,12 +27,28 @@ import com.example.reachyou.ui.component.button.BackButton
 import com.example.reachyou.ui.theme.ReachYouTheme
 import com.example.reachyou.ui.component.inputBox.InputBox
 import com.example.reachyou.ui.component.inputBox.UploadBox
+import com.example.reachyou.ui.utils.UiState
+import com.example.reachyou.ui.utils.ViewModelFactory
+import com.example.reachyou.ui.utils.reduceFileImage
+import com.example.reachyou.ui.utils.uriToFile
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 @Composable
 fun LaporBugScreen(
     modifier: Modifier = Modifier,
-    onBackButtonPressed: () -> Unit
+    onBackButtonPressed: () -> Unit,
+    viewModel: LaporBugViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = ViewModelFactory.getUserInstance(
+        LocalContext.current))
 ) {
+    val context = LocalContext.current
+    val uiState by viewModel.uiState.collectAsState()
+    var isLoading by rememberSaveable {
+        mutableStateOf(false)
+    }
     var selectedImageByUri by remember {
         mutableStateOf<Uri?>(null)
     }
@@ -45,6 +63,24 @@ fun LaporBugScreen(
         mutableStateOf("")
     }
 
+    when(uiState){
+        is UiState.Loading -> {
+            isLoading = true
+        }
+        is UiState.Success -> {
+            isLoading = false
+            viewModel.isSuccess = true
+            viewModel.isDialogShown = true
+        }
+        is UiState.Error -> {
+            isLoading = false
+            viewModel.isSuccess = false
+            viewModel.isDialogShown = true
+        }
+        else -> {
+            isLoading = false
+        }
+    }
     Column {
         BackButton(onClick = onBackButtonPressed)
         Text(text = "Laporkan Bug", style = MaterialTheme.typography.titleLarge, modifier = modifier.padding(15.dp))
@@ -55,8 +91,8 @@ fun LaporBugScreen(
             )
         })
         InputBox(
-            title = "Subject(Inti Permasalahan)",
-            subtitle = "Jelaskan kendala yang kamu alami",
+            title = "Email",
+            subtitle = "Email yang dapat dihubungi",
             input = subject,
             onValueChange = { subject = it }
         )
@@ -67,7 +103,21 @@ fun LaporBugScreen(
             onValueChange = { detail = it }
         )
         Spacer(modifier = modifier.height(20.dp))
-        ActionButton(text = "Laporkan!", onClick = {}, isLoading = false)
+        ActionButton(text = "Laporkan!", onClick = {
+            if(selectedImageByUri != null){
+                val file = uriToFile(selectedImageByUri as Uri, context)
+                val reduced = reduceFileImage(file)
+                val requestImageFile = reduced.asRequestBody("image/jpeg".toMediaTypeOrNull())
+                val imageMultiPart: MultipartBody.Part = MultipartBody.Part.createFormData(
+                    "file",
+                    file.name,
+                    requestImageFile
+                )
+                val emailMultipart = subject.toRequestBody("text/plain".toMediaType())
+                val bug = detail.toRequestBody("text/plain".toMediaType())
+                viewModel.laporBug(imageMultiPart, emailMultipart, bug)
+            }
+        }, isLoading = isLoading)
     }
 }
 
