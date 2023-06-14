@@ -62,8 +62,7 @@ fun ProfileBody(
                 Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                     Text(text = "Profile", style = MaterialTheme.typography.headlineMedium)
                 }
-                ItemBodyProfile(type = "Nama", value = "Christian Yaska Natawijaya", openModalBottomSheet = openModalBottomSheet)
-                ItemBodyProfile(type = "Username", value = user!!.username, openModalBottomSheet = openModalBottomSheet)
+                ItemBodyProfile(type = "Username", value = user.username, openModalBottomSheet = openModalBottomSheet)
                 ItemBodyProfile(type = "Email", value = user.email, openModalBottomSheet = openModalBottomSheet)
             }
             Divider(thickness = 1.dp, color = Color.Black.copy(alpha = 0.5f))

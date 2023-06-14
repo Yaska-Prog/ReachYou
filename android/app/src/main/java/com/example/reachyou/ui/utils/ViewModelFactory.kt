@@ -1,17 +1,20 @@
 package com.example.reachyou.ui.utils
 
 import android.content.Context
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.reachyou.data.repository.AuthRepository
 import com.example.reachyou.data.repository.NewsRepository
 import com.example.reachyou.data.repository.QuizRepository
 import com.example.reachyou.ui.component.utils.BottomSheetViewModel
+import com.example.reachyou.ui.screen.createNews.CreateNewsViewmodel
 import com.example.reachyou.ui.screen.detailNews.DetailNewsViewModel
 import com.example.reachyou.ui.screen.detailQuiz.DetailQuizViewmodel
 import com.example.reachyou.ui.screen.laporBug.LaporBugViewModel
 import com.example.reachyou.ui.screen.login.LoginViewModel
 import com.example.reachyou.ui.screen.news.NewsViewModel
+import com.example.reachyou.ui.screen.profile.ProfileViewModel
 import com.example.reachyou.ui.screen.register.RegisterViewmodel
 import com.example.reachyou.ui.screen.setupProfile.SetUpProfileViewModel
 
@@ -42,6 +45,12 @@ class ViewModelFactory(private val authRepository: AuthRepository? = null, priva
         else if(modelClass.isAssignableFrom(LaporBugViewModel::class.java)){
             return LaporBugViewModel(authRepository as AuthRepository) as T
         }
+        else if(modelClass.isAssignableFrom(ProfileViewModel::class.java)){
+            return ProfileViewModel(authRepository as AuthRepository) as T
+        }
+        else if(modelClass.isAssignableFrom(CreateNewsViewmodel::class.java)){
+            return CreateNewsViewmodel(newsRepository as NewsRepository) as T
+        }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }
 
@@ -61,10 +70,10 @@ class ViewModelFactory(private val authRepository: AuthRepository? = null, priva
             }.also { quizInstance = it }
 
         private var newsInstance: ViewModelFactory? = null
-        fun getNewsInstance(): ViewModelFactory =
+        fun getNewsInstance(context: Context): ViewModelFactory =
             newsInstance ?: synchronized(this){
                 newsInstance ?: synchronized(this){
-                    newsInstance ?: ViewModelFactory(newsRepository = Injection.provideNewsRepository())
+                    newsInstance ?: ViewModelFactory(newsRepository = Injection.provideNewsRepository(context = context))
                 }.also { newsInstance = it }
             }
     }

@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,7 +43,8 @@ fun DetailNewsScreen(
     modifier: Modifier = Modifier,
     navigateToNews: () -> Unit,
     idNews: Int,
-    viewModel: DetailNewsViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = ViewModelFactory.getNewsInstance())
+    viewModel: DetailNewsViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = ViewModelFactory.getNewsInstance(
+        LocalContext.current))
 ) {
     val uiState by viewModel.uiState.collectAsState()
     if(viewModel.isDialogShown){
@@ -64,7 +66,7 @@ fun DetailNewsScreen(
                 modifier = modifier.fillMaxSize(),
             ){
                 AsyncImage(
-                    model = "https://wallpaperaccess.com/full/685208.jpg",
+                    model = news.urlGambar,
                     contentDescription = "image",
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier
@@ -84,7 +86,7 @@ fun DetailNewsScreen(
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             AsyncImage(
-                                model = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+                                model = news.profil,
                                 contentDescription = "Profile Picture",
                                 contentScale = ContentScale.Crop,
                                 modifier = modifier
@@ -92,7 +94,7 @@ fun DetailNewsScreen(
                                     .clip(CircleShape)
                             )
                             Spacer(modifier = modifier.width(10.dp))
-                            Text(text = "Christian Yaska Natawijaya", style = MaterialTheme.typography.headlineMedium)
+                            Text(text = news.username, style = MaterialTheme.typography.headlineMedium)
                         }
                         Spacer(modifier = modifier.height(20.dp))
                         Text(text = news.title, style = MaterialTheme.typography.titleLarge, textAlign = TextAlign.Center)

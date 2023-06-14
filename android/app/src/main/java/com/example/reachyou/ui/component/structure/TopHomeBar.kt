@@ -19,18 +19,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.reachyou.data.local.SharedPreferenceManager
 import com.example.reachyou.ui.component.utils.CoinStatus
 import com.example.reachyou.ui.theme.ReachYouTheme
 
 @Composable
 fun TopHomeBar(
     modifier: Modifier = Modifier,
-    username: String,
-    coin: Int
+    sharedPreferenceManager: SharedPreferenceManager = SharedPreferenceManager(LocalContext.current)
 ) {
+    val shared = sharedPreferenceManager.getUser()
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -49,7 +51,7 @@ fun TopHomeBar(
         Column {
             Row {
                 AsyncImage(
-                    model = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                    model = shared?.profileUrl,
                     contentDescription = "Profile Picture",
                     contentScale = ContentScale.Crop,
                     modifier = modifier
@@ -58,8 +60,8 @@ fun TopHomeBar(
                         .clip(CircleShape)
                 )
                 Column {
-                    Text(text = "Selamat datang, $username", style = MaterialTheme.typography.titleLarge, color = Color.White)
-                    CoinStatus(coin = "$coin")
+                    Text(text = "Selamat datang, ${shared?.username}", style = MaterialTheme.typography.titleLarge, color = Color.White)
+                    CoinStatus(coin = "${shared?.koin}")
                     Spacer(modifier = modifier.height(15.dp))
                     Text(text = "Selamat Pagi", style = MaterialTheme.typography.titleLarge, color = Color.White)
                     Text(
@@ -77,6 +79,5 @@ fun TopHomeBar(
 @Composable
 fun TopHomeBarPreview() {
     ReachYouTheme {
-        TopHomeBar(username = "Yaska", coin = 0)
     }
 }

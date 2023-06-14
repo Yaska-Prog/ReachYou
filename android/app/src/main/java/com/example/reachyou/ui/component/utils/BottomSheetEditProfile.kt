@@ -85,11 +85,13 @@ fun BottomSheetEditProfile(
             }
             viewModel.isPositive = true
             viewModel.title = "Berhasil melakukan edit $type"
+            viewModel.subtitle = "Berhasil melakukan update profile"
             viewModel.showDialog()
         }
         is UiState.Error -> {
             viewModel.isPositive = false
             viewModel.title = "Gagal melakukan edit $type"
+            viewModel.subtitle = "Gagal melakukan update profile"
             viewModel.showDialog()
         }
 
@@ -112,7 +114,15 @@ fun BottomSheetEditProfile(
                 .padding(start = 16.dp, end = 16.dp))
             Button(
                 onClick = {
-                    viewModel.updateProfile(type, inputEditProfile)
+                    if(inputEditProfile != ""){
+                        viewModel.updateProfile(type, inputEditProfile)
+                    }
+                    else{
+                        viewModel.isPositive = false
+                        viewModel.title = "Gagal!"
+                        viewModel.subtitle = "Pastikan data sesuai"
+                        viewModel.showDialog()
+                    }
                 },
                 enabled = true,
                 shape = RoundedCornerShape(8.dp),

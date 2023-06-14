@@ -11,12 +11,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.reachyou.ui.component.button.ActionButton
@@ -24,11 +26,24 @@ import com.example.reachyou.ui.component.button.BackButton
 import com.example.reachyou.ui.theme.ReachYouTheme
 import com.example.reachyou.ui.component.inputBox.InputBox
 import com.example.reachyou.ui.component.inputBox.UploadBox
+import com.example.reachyou.ui.component.utils.CustomDialogQuiz
+import com.example.reachyou.ui.screen.laporBug.LaporBugViewModel
+import com.example.reachyou.ui.utils.UiState
+import com.example.reachyou.ui.utils.ViewModelFactory
+import com.example.reachyou.ui.utils.reduceFileImage
+import com.example.reachyou.ui.utils.uriToFile
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 @Composable
 fun CreateNewsScreen(
     modifier: Modifier = Modifier,
-    navigateToNews: () -> Unit
+    navigateToNews: () -> Unit,
+    viewModel: CreateNewsViewmodel = androidx.lifecycle.viewmodel.compose.viewModel(factory = ViewModelFactory.getNewsInstance(
+        LocalContext.current))
 ) {
     var selectedImageByUri by remember {
         mutableStateOf<Uri?>(null)
@@ -42,6 +57,53 @@ fun CreateNewsScreen(
     }
     var content by rememberSaveable{
         mutableStateOf("")
+    }
+    var isLoading by rememberSaveable {
+        mutableStateOf(false)
+    }
+    val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+
+    if(viewModel.isDialogShown){
+        CustomDialogQuiz(
+            title = viewModel.title,
+            subtitle = viewModel.subtitle,
+            onDismiss = {
+                if(viewModel.isSuccess){
+                    navigateToNews()
+                }
+                viewModel.dismissDialog()
+            },
+            onConfirm = {
+                if(viewModel.isSuccess){
+                    navigateToNews()
+                }
+                viewModel.dismissDialog()
+            },
+            isSuccess = viewModel.isSuccess
+        )
+    }
+    when(uiState){
+        is UiState.Loading -> {
+            isLoading = true
+        }
+        is UiState.Success -> {
+            isLoading = false
+            viewModel.title = "Sukses"
+            viewModel.subtitle = "Sukses membuat berita!"
+            viewModel.isSuccess = true
+            viewModel.isDialogShown = true
+        }
+        is UiState.Error -> {
+            isLoading = false
+            viewModel.title = "Gagal"
+            viewModel.subtitle = "Gagal membuat berita! Pesan error: ${(uiState as UiState.Error).errorMessage}"
+            viewModel.isSuccess = false
+            viewModel.isDialogShown = true
+        }
+        else -> {
+            isLoading = false
+        }
     }
     Column {
         BackButton(onClick = navigateToNews)
@@ -67,7 +129,27 @@ fun CreateNewsScreen(
             onValueChange = { content = it }
         )
         Spacer(modifier = modifier.height(10.dp))
-        ActionButton(text = "Laporkan!", onClick = {}, isLoading = false)
+        ActionButton(text = "Laporkan!", onClick = {
+           if(selectedImageByUri != null && headline != "" && content != ""){
+               val file = uriToFile(selectedImageByUri as Uri, context)
+               val reduced = reduceFileImage(file)
+               val requestImageFile = reduced.asRequestBody("image/jpeg".toMediaTypeOrNull())
+               val imageMultiPart: MultipartBody.Part = MultipartBody.Part.createFormData(
+                   "file",
+                   file.name,
+                   requestImageFile
+               )
+               val titleMultipart = headline.toRequestBody("text/plain".toMediaType())
+               val descriptionMultipart = content.toRequestBody("text/plain".toMediaType())
+               viewModel.createNews(imageMultiPart, titleMultipart, descriptionMultipart)
+           }
+            else{
+               viewModel.title = "Gagal!"
+               viewModel.subtitle = "Gagal membuat berita! Tolong lengkapi data yang ada terlebih dahulu!"
+               viewModel.isSuccess = false
+               viewModel.isDialogShown = true
+           }
+        }, isLoading = isLoading)
     }
 }
 

@@ -73,6 +73,7 @@ fun LaporBugScreen(
                 onBackButtonPressed()
             },
             onConfirm = {
+                viewModel.dismissDialog()
                 onBackButtonPressed()
             },
             isSuccess = viewModel.isSuccess
@@ -106,7 +107,7 @@ fun LaporBugScreen(
         Text(text = "Bantu kami untuk menjadi  lebih bermanfaat dengan cara melaporkan bug atau kendala yang anda alami!", style = MaterialTheme.typography.bodyMedium, modifier = modifier.padding(start = 15.dp, end = 15.dp))
         UploadBox(selectedImageByUri = selectedImageByUri, onClick = {
             photoLauncher.launch(
-                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
+                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
             )
         })
         InputBox(

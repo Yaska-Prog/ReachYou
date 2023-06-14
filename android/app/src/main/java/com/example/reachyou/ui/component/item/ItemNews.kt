@@ -50,7 +50,7 @@ fun ItemNews(
                 .clickable { navigateToDetail(news.id) }
         ) {
             AsyncImage(
-                model = "https://imgv3.fotor.com/images/blog-cover-image/10-profile-picture-ideas-to-make-you-stand-out.jpg",
+                model = news.urlGambar,
                 contentDescription = news.id.toString(),
                 contentScale = ContentScale.Crop,
                 modifier = modifier
@@ -76,14 +76,14 @@ fun ItemNews(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     AsyncImage(
-                        model = "https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80",
+                        model = news.urlGambar,
                         contentDescription = "Profile picture",
                         contentScale = ContentScale.Crop,
                         modifier = modifier
                             .size(20.dp)
                             .clip(CircleShape)
                     )
-                    Text(text = "Christian Yaska", style = MaterialTheme.typography.labelSmall)
+                    Text(text = news.username, style = MaterialTheme.typography.labelSmall)
                 }
             }
         }

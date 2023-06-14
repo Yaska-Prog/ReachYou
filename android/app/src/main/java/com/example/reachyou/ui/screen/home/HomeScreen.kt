@@ -14,11 +14,9 @@ import com.example.reachyou.ui.theme.ReachYouTheme
 fun HomeScreen(
     modifier: Modifier = Modifier,
     navigateToScanner: (Int) -> Unit,
-    sharedPreferenceManager: SharedPreferenceManager = SharedPreferenceManager(LocalContext.current)
 ) {
     Column {
-        val shared = sharedPreferenceManager.getUser()
-        TopHomeBar(username = shared!!.username, coin = shared.koin)
+        TopHomeBar()
         BodyHome(navigateToScanner = navigateToScanner)
     }
 }

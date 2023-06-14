@@ -18,7 +18,6 @@ object Injection {
     }
 
     fun provideQuizRepository(context: Context): QuizRepository{
-        val sharedPref = SharedPreferenceManager(context)
         val apiService = ApiConfig().getApiService()
         val applicationScope = CoroutineScope(SupervisorJob())
         val database = QuestionRoomDatabase.getDatabase(context = context, applicationScope = applicationScope)
@@ -26,8 +25,9 @@ object Injection {
         return QuizRepository.getInstance(apiService, questionDao)
     }
 
-    fun provideNewsRepository(): NewsRepository{
+    fun provideNewsRepository(context: Context): NewsRepository{
+        val sharedPref = SharedPreferenceManager(context)
         val apiService = ApiConfig().getApiService()
-        return NewsRepository.getInstance(apiService)
+        return NewsRepository.getInstance(apiService, sharedPref)
     }
 }

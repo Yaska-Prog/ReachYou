@@ -49,7 +49,9 @@ fun DetailQuizScreen(
         viewModel.getQuestion()
     }
     val uiState by viewModel.uiState.collectAsState()
-    BackButton(onClick = {})
+    BackButton(onClick = {
+        navigateToQuiz()
+    })
     if(viewModel.isDialogShown){
         CustomDialogQuiz(
             onDismiss = {

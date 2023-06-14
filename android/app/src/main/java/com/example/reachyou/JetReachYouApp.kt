@@ -148,11 +148,11 @@ fun JetReachYouApp(
         }
         NavHost(
             navController = navController,
-            startDestination = Screen.LaporBug.route,
+            startDestination =  if(user?.username != "" && user?.username != null) Screen.Home.route else Screen.Landing.route,
             modifier = Modifier.padding(innerPadding)){
             composable(Screen.Landing.route){
                 LandingScreen(modifier = Modifier,
-                    navigateToLogin = {navController.navigate(Screen.SetupProfile.route)},
+                    navigateToLogin = {navController.navigate(Screen.Login.route)},
                     navigateToRegister = {navController.navigate(Screen.Register.route)})
             }
             composable(Screen.Login.route){

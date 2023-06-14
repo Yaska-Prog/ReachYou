@@ -1,11 +1,12 @@
 package com.example.reachyou.data.remote.retrofit
 
-import com.example.reachyou.data.remote.response.ArticleResponse
-import com.example.reachyou.data.remote.response.ArticleResponseItem
+import com.example.reachyou.data.remote.response.ArticleMainResponse
+import com.example.reachyou.data.remote.response.CreateNewsResponse
 import com.example.reachyou.data.remote.response.LoginResponse
 import com.example.reachyou.data.remote.response.RegisterMainResponse
 import com.example.reachyou.data.remote.response.RegisterResponse
 import com.example.reachyou.data.remote.response.SetupProfileResponse
+import com.example.reachyou.data.remote.response.UpdateProfilePictureResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -34,8 +35,6 @@ interface ApiService {
         @Field("password") password: String
     ): Response<RegisterMainResponse>
 
-
-
     @FormUrlEncoded
     @PATCH("/tambahpoint/{id}")
     suspend fun updateCoin(
@@ -44,18 +43,25 @@ interface ApiService {
     ): Response<RegisterResponse>
 
     @GET("article")
-    suspend fun getAllArticle(): Response<List<ArticleResponseItem>>
+    suspend fun getAllArticle(): Response<List<ArticleMainResponse>>
 
     @GET("/article/{id}")
     suspend fun getDetailArticle(
         @Path("id") id: Int
-    ): Response<ArticleResponseItem>
+    ): Response<ArticleMainResponse>
 
     @FormUrlEncoded
     @PATCH("/updateusername/{id}")
     suspend fun updateUsername(
         @Path("id") uuid: String,
         @Field("username") username: String
+    ): Response<RegisterResponse>
+
+    @FormUrlEncoded
+    @PATCH("/updateemail/{id}")
+    suspend fun updateEmail(
+        @Path("id") uuid: String,
+        @Field("email") email: String
     ): Response<RegisterResponse>
 
     @Multipart
@@ -73,4 +79,20 @@ interface ApiService {
         @Part file: MultipartBody.Part,
         @Part("username") username: RequestBody
     ): Response<SetupProfileResponse>
+
+    @Multipart
+    @PATCH("/profil/{id}")
+    suspend fun updateProfilePicture(
+        @Path("id") id: String,
+        @Part file: MultipartBody.Part,
+    ): Response<UpdateProfilePictureResponse>
+
+    @Multipart
+    @POST("/articlegambar/{id}")
+    suspend fun createNews(
+        @Path("id") id: String,
+        @Part file: MultipartBody.Part,
+        @Part("title") title: RequestBody,
+        @Part("description") description: RequestBody
+    ): Response<CreateNewsResponse>
 }

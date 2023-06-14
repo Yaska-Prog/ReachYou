@@ -10,7 +10,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import java.lang.Exception
+import kotlin.Exception
 
 class AuthRepository(private val apiService: ApiService, private val sharedPreferenceManager: SharedPreferenceManager) {
     fun login(username: String, password: String) = flow{
@@ -79,6 +79,16 @@ class AuthRepository(private val apiService: ApiService, private val sharedPrefe
                     emit(UiState.Error(client.errorBody().toString()))
                 }
             }
+            else if(type == "Email"){
+                val client = apiService.updateEmail(uuid = user!!.id, email = value)
+                if(client.isSuccessful && client.body() != null){
+                    val responseBody = client.body()
+                    emit(UiState.Success(responseBody!!.msg))
+                }
+                else{
+                    emit(UiState.Error(client.errorBody().toString()))
+                }
+            }
         } catch (e: Exception){
             emit(UiState.Error(e.message.toString()))
         }
@@ -93,6 +103,24 @@ class AuthRepository(private val apiService: ApiService, private val sharedPrefe
                 emit(UiState.Success(responseBody!!.msg))
             }
             else{
+                emit(UiState.Error(client.errorBody().toString()))
+            }
+        } catch (e: Exception){
+            emit(UiState.Error(e.message.toString()))
+        }
+    }
+
+    fun updateProfilePicture(file: MultipartBody.Part) = flow{
+        emit(UiState.Loading)
+        try {
+            val user = sharedPreferenceManager.getUser()
+            val client = apiService.updateProfilePicture(id = user!!.id, file = file)
+            if(client.isSuccessful && client.body() != null){
+                val responseBody = client.body()
+                user.profileUrl = responseBody!!.url
+                sharedPreferenceManager.saveUser(user)
+                emit(UiState.Success(responseBody.msg))
+            } else {
                 emit(UiState.Error(client.errorBody().toString()))
             }
         } catch (e: Exception){

@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,7 +40,8 @@ fun NewsScreen(
     modifier: Modifier =  Modifier,
     navigateToCreate: () -> Unit,
     navigateToDetail: (Int) -> Unit,
-    viewModel: NewsViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = ViewModelFactory.getNewsInstance())
+    viewModel: NewsViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = ViewModelFactory.getNewsInstance(
+        LocalContext.current))
 ) {
 //    val list = listOf(1, 2, 3, 4, 5)
 
@@ -89,7 +91,7 @@ fun NewsScreen(
                 FloatingActionButton(
                     onClick = navigateToCreate,
                     modifier = Modifier
-                        .padding(bottom = 50.dp, end = 15.dp)
+                        .padding(bottom = 20.dp, end = 15.dp)
                         .align(alignment = Alignment.BottomEnd)
                 ) {
                     Icon(imageVector = ImageVector.vectorResource(id = R.drawable.custom_fab),
