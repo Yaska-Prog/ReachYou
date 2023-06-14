@@ -139,8 +139,6 @@ fun DetailQuizScreen(
                 val user = sharedPreferenceManager.getUser()
                 user!!.koin = viewModel.coin
                 sharedPreferenceManager.saveUser(user)
-                val user1 = sharedPreferenceManager.getUser()
-                Log.d("userKoin", "${user1!!.username} - ${user1.koin}")
                 viewModel.finishQuiz(user.id)
             }
 

@@ -27,7 +27,8 @@ import com.example.reachyou.ui.theme.ReachYouTheme
 fun LandingScreen(
     modifier: Modifier = Modifier,
     navigateToLogin: () -> Unit,
-    navigateToRegister: () -> Unit
+    navigateToRegister: () -> Unit,
+    navigateToScanner: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -49,6 +50,11 @@ fun LandingScreen(
         Spacer(modifier = modifier.height(50.dp))
         ActionButton(text = "Login", onClick = navigateToLogin, isLoading = false)
         TransparentButton(onClick = navigateToRegister)
+        ActionButton(
+            text = "Gunakan Reachyou sekarang!",
+            onClick = navigateToScanner,
+            isLoading = false
+        )
     }
 }
 

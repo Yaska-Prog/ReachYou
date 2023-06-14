@@ -23,7 +23,7 @@ class AuthRepository(private val apiService: ApiService, private val sharedPrefe
                 emit(UiState.Success(user as UserModel))
             }
             else{
-                emit(UiState.Error("Gagal register, data tidak valid"))
+                emit(UiState.Error("Gagal login, pesan: ${client.errorBody()}"))
             }
         }
         catch (e: Exception){

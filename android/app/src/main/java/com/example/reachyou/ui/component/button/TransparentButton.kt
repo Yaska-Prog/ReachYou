@@ -28,8 +28,8 @@ fun TransparentButton(
         enabled = true,
         modifier = modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, top = 5.dp)
-            .height(40.dp)
+            .padding(start = 16.dp, end = 16.dp, bottom = 10.dp)
+            .height(55.dp)
             .border(
                 width = 0.5.dp,
                 color = Color.Black,

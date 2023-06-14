@@ -60,10 +60,10 @@ fun TopHomeBar(
                         .clip(CircleShape)
                 )
                 Column {
-                    Text(text = "Selamat datang, ${shared?.username}", style = MaterialTheme.typography.titleLarge, color = Color.White)
+                    Text(text = "Selamat datang", style = MaterialTheme.typography.titleLarge, color = Color.White)
                     CoinStatus(coin = "${shared?.koin}")
                     Spacer(modifier = modifier.height(15.dp))
-                    Text(text = "Selamat Pagi", style = MaterialTheme.typography.titleLarge, color = Color.White)
+                    Text(text = "Halo, ${shared?.username}", style = MaterialTheme.typography.titleLarge, color = Color.White)
                     Text(
                         text = "Apa yang anda butuhkan hari ini?",
                         style = MaterialTheme.typography.bodyMedium,

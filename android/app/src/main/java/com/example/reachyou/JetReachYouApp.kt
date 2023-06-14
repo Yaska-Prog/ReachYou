@@ -153,7 +153,8 @@ fun JetReachYouApp(
             composable(Screen.Landing.route){
                 LandingScreen(modifier = Modifier,
                     navigateToLogin = {navController.navigate(Screen.Login.route)},
-                    navigateToRegister = {navController.navigate(Screen.Register.route)})
+                    navigateToRegister = {navController.navigate(Screen.Register.route)},
+                    navigateToScanner = {navController.navigate(Screen.ScannerBISINDO.createRoute(0))})
             }
             composable(Screen.Login.route){
                 LoginScreen(
@@ -202,7 +203,9 @@ fun JetReachYouApp(
             }
             composable(route = Screen.ScannerBISINDO.route, arguments = listOf(navArgument("index"){type = NavType.IntType})){
                 val index = it.arguments?.getInt("index") ?: 0
-                ScannerBISINDOScreen(outputDirectory = outputDirectory, onError = {}, index = index, navigateToHome = {navController.navigate(Screen.Home.route)})
+                ScannerBISINDOScreen(outputDirectory = outputDirectory, onError = {}, index = index, navigateToHome = {
+                    if(user?.username != "" && user?.username != null) navController.navigate(Screen.Home.route) else navController.navigate(Screen.Landing.route)
+                    })
             }
             composable(route = Screen.LaporBug.route){
                 LaporBugScreen(onBackButtonPressed = {navController.navigate(Screen.Profile.route)})
