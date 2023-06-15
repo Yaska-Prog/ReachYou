@@ -42,7 +42,7 @@ import com.google.tflite.objectdetection.env.Logger
 
 abstract class CameraMoneyActivity : AppCompatActivity(), OnImageAvailableListener,
         Camera.PreviewCallback, CompoundButton.OnCheckedChangeListener, View.OnClickListener,
-        CameraConnectionFragment.ConnectionCallback {
+        CameraMoneyConnectionFragment.ConnectionCallback {
     protected var previewWidth = 0
     protected var previewHeight = 0
     val isDebug = false
@@ -308,8 +308,8 @@ abstract class CameraMoneyActivity : AppCompatActivity(), OnImageAvailableListen
         val fragment: Fragment
         if (useCamera2API) {
 
-            val camera2Fragment = CameraConnectionFragment.newInstance(
-                    object : CameraConnectionFragment.ConnectionCallback {
+            val camera2Fragment = CameraMoneyConnectionFragment.newInstance(
+                    object : CameraMoneyConnectionFragment.ConnectionCallback {
                         override fun onPreviewSizeChosen(size: Size, cameraRotation: Int) {
                             previewHeight = size.height
                             previewWidth = size.width
@@ -325,7 +325,7 @@ abstract class CameraMoneyActivity : AppCompatActivity(), OnImageAvailableListen
             }
             fragment = camera2Fragment
         } else {
-            fragment = LegacyCameraConnectionFragment(this, layoutId, desiredPreviewFrameSize)
+            fragment = LegacyCameraConnectionMoneyFragment(this, layoutId, desiredPreviewFrameSize)
         }
 
         supportFragmentManager.beginTransaction().replace(R.id.container, fragment).commit()
