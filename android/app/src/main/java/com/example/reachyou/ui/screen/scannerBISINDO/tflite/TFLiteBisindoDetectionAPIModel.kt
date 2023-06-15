@@ -1,4 +1,4 @@
-package com.example.reachyou.ui.screen.scannerBISINDO
+package com.example.reachyou.ui.screen.scannerBISINDO.tflite
 
 import android.content.res.AssetManager
 import android.graphics.Bitmap
@@ -6,7 +6,6 @@ import android.graphics.RectF
 import android.os.Trace
 import android.util.ArrayMap
 import com.example.reachyou.ui.screen.scannerBISINDO.env.Logger
-import com.example.reachyou.ui.screen.scannerBISINDO.tflite.Classifier
 import org.tensorflow.lite.Interpreter
 import java.io.BufferedReader
 import java.io.FileInputStream
@@ -20,7 +19,7 @@ import java.nio.channels.FileChannel
 import java.util.Vector
 
 
-class TFLiteObjectDetectionAPIModel private constructor() : Classifier {
+class TFLiteBisindoDetectionAPIModel private constructor() : Classifier {
     override val statString: String
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
     private var isModelQuantized: Boolean = false
@@ -82,10 +81,10 @@ class TFLiteObjectDetectionAPIModel private constructor() : Classifier {
 
         val inputArray = arrayOf<Any>(imgData!!)
         val outputMap = ArrayMap<Int, Any>()
-        outputMap[0] = outputLocations!!
-        outputMap[1] = outputClasses!!
-        outputMap[2] = outputScores!!
-        outputMap[3] = numDetections!!
+        outputMap[1] = outputLocations!!
+        outputMap[3] = outputClasses!!
+        outputMap[0] = outputScores!!
+        outputMap[2] = numDetections!!
         Trace.endSection()
 
         // Run the inference call.
@@ -139,8 +138,8 @@ class TFLiteObjectDetectionAPIModel private constructor() : Classifier {
         // Only return this many results.
         private val NUM_DETECTIONS = 10
         // Float model
-        private val IMAGE_MEAN = 128.0f
-        private val IMAGE_STD = 128.0f
+        private val IMAGE_MEAN = 127.5f
+        private val IMAGE_STD = 127.5f
         // Number of threads in the java app
         private val NUM_THREADS = 4
 
@@ -171,7 +170,7 @@ class TFLiteObjectDetectionAPIModel private constructor() : Classifier {
             labelFilename: String,
             inputSize: Int,
             isQuantized: Boolean): Classifier {
-            val d = TFLiteObjectDetectionAPIModel()
+            val d = TFLiteBisindoDetectionAPIModel()
 
             var labelsInput: InputStream? = null
             val actualFilename = labelFilename.split("file:///android_asset/".toRegex())

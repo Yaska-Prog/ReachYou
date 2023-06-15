@@ -20,10 +20,10 @@
         android:theme="@style/Theme.ReachYou"
         tools:targetApi="31">
         <activity
-            android:name=".ui.screen.scannerBISINDO.DetectorActivity"
+            android:name=".ui.screen.scannerBISINDO.DetectorActivityBisindo"
             android:exported="false" />
         <activity
-            android:name=".ui.screen.scannerBISINDO.CameraActivity"
+            android:name=".ui.screen.scannerBISINDO.CameraActivityBisindo"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
