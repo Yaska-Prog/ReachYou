@@ -26,10 +26,10 @@ import android.util.Size
 import android.util.SparseIntArray
 import android.view.*
 import androidx.fragment.app.Fragment
-import com.google.tflite.objectdetection.customview.AutoFitTextureView
-import com.google.tflite.objectdetection.env.ImageUtils
-import com.google.tflite.objectdetection.env.Logger
-import org.tensorflow.lite.examples.detection.R
+import com.example.reachyou.R
+import com.example.reachyou.ui.screen.scannerBISINDO.customView.AutoFitTextureView
+import com.example.reachyou.ui.screen.scannerBISINDO.env.ImageUtils
+import com.example.reachyou.ui.screen.scannerBISINDO.env.Logger
 import java.io.IOException
 
 class LegacyCameraConnectionMoneyFragment(
@@ -62,7 +62,7 @@ class LegacyCameraConnectionMoneyFragment(
                 for (size in cameraSizes) {
                     sizes[i++] = Size(size.width, size.height)
                 }
-                val previewSize = CameraConnectionFragment.chooseOptimalSize(
+                val previewSize = CameraMoneyConnectionFragment.chooseOptimalSize(
                         sizes, desiredSize.width, desiredSize.height)
                 previewSize?.width?.let { parameters.setPreviewSize(it, previewSize.height) }
                 camera!!.setDisplayOrientation(90)

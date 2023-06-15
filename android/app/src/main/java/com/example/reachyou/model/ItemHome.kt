@@ -6,5 +6,6 @@ data class ItemHome(
     val icon: ImageVector,
     val headline: String,
     val subtitle: String,
-    val index: Int
+    val index: Int,
+    val navigateToScanner: () -> Unit
 )

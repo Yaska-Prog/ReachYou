@@ -21,9 +21,11 @@
         tools:targetApi="31">
         <activity
             android:name=".ui.screen.scannerBISINDO.DetectorActivityBisindo"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:exported="false" />
         <activity
             android:name=".ui.screen.scannerBISINDO.CameraActivityBisindo"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

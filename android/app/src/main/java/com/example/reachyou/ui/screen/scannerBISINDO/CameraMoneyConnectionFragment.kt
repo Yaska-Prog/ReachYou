@@ -16,10 +16,12 @@
 
 package com.google.tflite.objectdetection
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.ImageFormat
 import android.graphics.Matrix
@@ -47,17 +49,18 @@ import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import org.tensorflow.lite.examples.detection.R
+import com.example.reachyou.R
+import com.example.reachyou.ui.screen.scannerBISINDO.customView.AutoFitTextureView
+import com.example.reachyou.ui.screen.scannerBISINDO.env.Logger
 import java.util.ArrayList
 import java.util.Arrays
 import java.util.Collections
 import java.util.Comparator
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
-import com.google.tflite.objectdetection.customview.AutoFitTextureView
-import com.google.tflite.objectdetection.env.Logger
 
 @SuppressLint("ValidFragment")
 class CameraMoneyConnectionFragment private constructor(
@@ -244,6 +247,20 @@ class CameraMoneyConnectionFragment private constructor(
         try {
             if (!cameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                 throw RuntimeException("Time out waiting to lock camera opening.")
+            }
+            if (ActivityCompat.checkSelfPermission(
+                    requireActivity().applicationContext,
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return
             }
             manager.openCamera(cameraId!!, stateCallback, backgroundHandler)
         } catch (e: CameraAccessException) {

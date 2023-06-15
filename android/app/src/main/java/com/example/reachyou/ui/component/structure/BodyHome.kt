@@ -27,13 +27,14 @@ import com.example.reachyou.ui.theme.ReachYouTheme
 @Composable
 fun BodyHome(
     modifier: Modifier = Modifier,
-    navigateToScanner: (Int) -> Unit
+    navigateToScanner: (Int) -> Unit,
+    navigateToBisindo: () -> Unit
 ) {
     val listItem = listOf<ItemHome>(
-        ItemHome(icon = ImageVector.vectorResource(id = R.drawable.hand_twofinger), "BISINDO", "Penerjemah BISINDO", 0),
-        ItemHome(icon = ImageVector.vectorResource(id = R.drawable.color_lens), "Warna", "Fitur Pendeteksi Warna", 1),
-        ItemHome(icon = ImageVector.vectorResource(id = R.drawable.uang), "Uang", "Pendeteksi Mata Uang", 2),
-        ItemHome(icon = ImageVector.vectorResource(id = R.drawable.emoji_objects), "Objek", "Pendeteksi Objek benda", 3)
+        ItemHome(icon = ImageVector.vectorResource(id = R.drawable.hand_twofinger), "BISINDO", "Penerjemah BISINDO", 0, navigateToBisindo),
+        ItemHome(icon = ImageVector.vectorResource(id = R.drawable.color_lens), "Warna", "Fitur Pendeteksi Warna", 1, navigateToBisindo),
+        ItemHome(icon = ImageVector.vectorResource(id = R.drawable.uang), "Uang", "Pendeteksi Mata Uang", 2, navigateToBisindo),
+        ItemHome(icon = ImageVector.vectorResource(id = R.drawable.emoji_objects), "Objek", "Pendeteksi Objek benda", 3, navigateToBisindo)
     )
     Column(
         modifier = modifier.padding(20.dp)
@@ -50,7 +51,7 @@ fun BodyHome(
                     headline = listItem[index].headline,
                     subtitle = listItem[index].subtitle,
                     index = listItem[index].index,
-                    navigateToScanner = navigateToScanner
+                    navigateToScanner = listItem[index].navigateToScanner
                 )
             }
         })
@@ -64,7 +65,7 @@ fun ItemHomeUI(
     subtitle: String,
     modifier: Modifier = Modifier,
     index: Int,
-    navigateToScanner: (Int) -> Unit
+    navigateToScanner: () -> Unit
 ) {
     Card(
         colors = CardDefaults.cardColors(
@@ -75,7 +76,7 @@ fun ItemHomeUI(
             .padding(10.dp)
             .background(color = Color.White)
             .clickable {
-                       navigateToScanner(index)
+                       navigateToScanner()
             },
     ) {
         Row(modifier = modifier.padding(top = 15.dp, bottom = 15.dp)) {

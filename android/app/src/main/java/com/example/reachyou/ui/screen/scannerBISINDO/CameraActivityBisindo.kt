@@ -61,6 +61,7 @@ abstract class CameraActivityBisindo : AppCompatActivity(), ImageReader.OnImageA
 
     override fun onCreate(savedInstanceState: Bundle?) {
         LOGGER.d("onCreate $this")
+        setTheme(R.style.Theme_ReachYou)
         super.onCreate(null)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 

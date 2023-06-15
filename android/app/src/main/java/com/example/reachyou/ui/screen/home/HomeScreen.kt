@@ -14,10 +14,11 @@ import com.example.reachyou.ui.theme.ReachYouTheme
 fun HomeScreen(
     modifier: Modifier = Modifier,
     navigateToScanner: (Int) -> Unit,
+    navigateToBisindo: () -> Unit
 ) {
     Column {
         TopHomeBar()
-        BodyHome(navigateToScanner = navigateToScanner)
+        BodyHome(navigateToScanner = navigateToScanner, navigateToBisindo = navigateToBisindo)
     }
 }
 

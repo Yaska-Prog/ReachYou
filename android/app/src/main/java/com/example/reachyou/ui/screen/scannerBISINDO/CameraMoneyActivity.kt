@@ -36,9 +36,12 @@ import android.view.WindowManager
 import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import org.tensorflow.lite.examples.detection.R
-import com.google.tflite.objectdetection.env.ImageUtils
-import com.google.tflite.objectdetection.env.Logger
+import com.example.reachyou.R
+import com.example.reachyou.ui.screen.scannerBISINDO.env.ImageUtils
+import com.example.reachyou.ui.screen.scannerBISINDO.env.Logger
+//import org.tensorflow.lite.examples.detection.R
+//import com.google.tflite.objectdetection.env.ImageUtils
+//import com.google.tflite.objectdetection.env.Logger
 
 abstract class CameraMoneyActivity : AppCompatActivity(), OnImageAvailableListener,
         Camera.PreviewCallback, CompoundButton.OnCheckedChangeListener, View.OnClickListener,
@@ -76,7 +79,7 @@ abstract class CameraMoneyActivity : AppCompatActivity(), OnImageAvailableListen
         super.onCreate(null)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        setContentView(R.layout.activity_camera)
+        setContentView(R.layout.activity_camera_bisindo)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
@@ -232,6 +235,7 @@ abstract class CameraMoneyActivity : AppCompatActivity(), OnImageAvailableListen
 
     override fun onRequestPermissionsResult(
             requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSIONS_REQUEST) {
             if (grantResults.size > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED

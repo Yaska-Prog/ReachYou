@@ -1,5 +1,6 @@
 package com.example.reachyou
 
+import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -52,6 +53,8 @@ import com.example.reachyou.ui.screen.login.LoginScreen
 import com.example.reachyou.ui.screen.news.NewsScreen
 import com.example.reachyou.ui.screen.profile.ProfileScreen
 import com.example.reachyou.ui.screen.register.RegisterScreen
+import com.example.reachyou.ui.screen.scannerBISINDO.CameraActivityBisindo
+import com.example.reachyou.ui.screen.scannerBISINDO.DetectorActivityBisindo
 import com.example.reachyou.ui.screen.scannerBISINDO.ScannerBISINDOScreen
 import com.example.reachyou.ui.screen.setupProfile.SetupProfileScreen
 import kotlinx.coroutines.launch
@@ -75,6 +78,7 @@ fun JetReachYouApp(
         mutableIntStateOf(0)
     }
     val user = sharedPreferenceManager.getUser()
+    val context = LocalContext.current
     val bottomNavItem = listOf<BottomBarItem>(
         BottomBarItem("home", Icons.Default.Home, Screen.Home),
         BottomBarItem("news", ImageVector.vectorResource(id = R.drawable.newspaper_icon), Screen.News),
@@ -176,7 +180,8 @@ fun JetReachYouApp(
             composable(Screen.Home.route){
                 HomeScreen(
                     navigateToScanner = {index ->
-                        navController.navigate(Screen.ScannerBISINDO.createRoute(index))}
+                        navController.navigate(Screen.ScannerBISINDO.createRoute(index))},
+                    navigateToBisindo = {context.startActivity(Intent(context, DetectorActivityBisindo::class.java))}
                 )
             }
             composable(Screen.Profile.route){

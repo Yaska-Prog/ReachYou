@@ -26,15 +26,14 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.Toast
-import com.google.tflite.objectdetection.customview.OverlayView
-import com.google.tflite.objectdetection.customview.OverlayView.DrawCallback
-import com.google.tflite.objectdetection.env.BorderedText
-import com.google.tflite.objectdetection.env.ImageUtils
-import com.google.tflite.objectdetection.env.Logger
-import com.google.tflite.objectdetection.tflite.Classifier
-import com.google.tflite.objectdetection.tflite.TFLiteObjectDetectionAPIModel
-import com.google.tflite.objectdetection.tracking.MultiBoxTracker
-import org.tensorflow.lite.examples.detection.R
+import com.example.reachyou.R
+import com.example.reachyou.ui.screen.scannerBISINDO.customView.OverlayView
+import com.example.reachyou.ui.screen.scannerBISINDO.env.BorderedText
+import com.example.reachyou.ui.screen.scannerBISINDO.env.ImageUtils
+import com.example.reachyou.ui.screen.scannerBISINDO.env.Logger
+import com.example.reachyou.ui.screen.scannerBISINDO.tflite.Classifier
+import com.example.reachyou.ui.screen.scannerBISINDO.tflite.TFLiteBisindoDetectionAPIModel
+import com.example.reachyou.ui.screen.scannerBISINDO.tracking.MultiBoxTracker
 import java.io.IOException
 import java.util.*
 
@@ -74,7 +73,7 @@ class DetectorMoneyActivity : CameraMoneyActivity(), OnImageAvailableListener {
     private var borderedText: BorderedText? = null
 
     override val layoutId: Int
-        get() = R.layout.camera_connection_fragment_tracking
+        get() = R.layout.activity_camera_bisindo
 
     override val desiredPreviewFrameSize: Size
         get() = DESIRED_PREVIEW_SIZE
@@ -90,7 +89,7 @@ class DetectorMoneyActivity : CameraMoneyActivity(), OnImageAvailableListener {
         var cropSize = TF_OD_API_INPUT_SIZE
 
         try {
-            detector = TFLiteObjectDetectionAPIModel.create(
+            detector = TFLiteBisindoDetectionAPIModel.create(
                     assets,
                     TF_OD_API_MODEL_FILE,
                     TF_OD_API_LABELS_FILE,
@@ -125,7 +124,7 @@ class DetectorMoneyActivity : CameraMoneyActivity(), OnImageAvailableListener {
 
         trackingOverlay = findViewById<View>(R.id.tracking_overlay) as OverlayView
         trackingOverlay.addCallback(
-                object : DrawCallback {
+                object : OverlayView.DrawCallback {
                     override fun drawCallback(canvas: Canvas) {
                         tracker!!.draw(canvas)
                         if (isDebug) {
