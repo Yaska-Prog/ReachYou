@@ -57,6 +57,7 @@ import com.example.reachyou.ui.screen.scannerBISINDO.CameraActivityBisindo
 import com.example.reachyou.ui.screen.scannerBISINDO.DetectorActivityBisindo
 import com.example.reachyou.ui.screen.scannerBISINDO.ScannerBISINDOScreen
 import com.example.reachyou.ui.screen.setupProfile.SetupProfileScreen
+import com.google.tflite.objectdetection.DetectorMoneyActivity
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -181,7 +182,8 @@ fun JetReachYouApp(
                 HomeScreen(
                     navigateToScanner = {index ->
                         navController.navigate(Screen.ScannerBISINDO.createRoute(index))},
-                    navigateToBisindo = {context.startActivity(Intent(context, DetectorActivityBisindo::class.java))}
+                    navigateToBisindo = {context.startActivity(Intent(context, DetectorActivityBisindo::class.java))},
+                    navigateToMoney = {context.startActivity(Intent(context, DetectorMoneyActivity::class.java))},
                 )
             }
             composable(Screen.Profile.route){

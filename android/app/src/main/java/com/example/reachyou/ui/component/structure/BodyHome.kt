@@ -28,12 +28,13 @@ import com.example.reachyou.ui.theme.ReachYouTheme
 fun BodyHome(
     modifier: Modifier = Modifier,
     navigateToScanner: (Int) -> Unit,
-    navigateToBisindo: () -> Unit
+    navigateToBisindo: () -> Unit,
+    navigateToMoney: () -> Unit
 ) {
     val listItem = listOf<ItemHome>(
         ItemHome(icon = ImageVector.vectorResource(id = R.drawable.hand_twofinger), "BISINDO", "Penerjemah BISINDO", 0, navigateToBisindo),
         ItemHome(icon = ImageVector.vectorResource(id = R.drawable.color_lens), "Warna", "Fitur Pendeteksi Warna", 1, navigateToBisindo),
-        ItemHome(icon = ImageVector.vectorResource(id = R.drawable.uang), "Uang", "Pendeteksi Mata Uang", 2, navigateToBisindo),
+        ItemHome(icon = ImageVector.vectorResource(id = R.drawable.uang), "Uang", "Pendeteksi Mata Uang", 2, navigateToMoney),
         ItemHome(icon = ImageVector.vectorResource(id = R.drawable.emoji_objects), "Objek", "Pendeteksi Objek benda", 3, navigateToBisindo)
     )
     Column(
