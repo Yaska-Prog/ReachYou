@@ -1,4 +1,4 @@
-package com.google.tflite.objectdetection
+package com.example.reachyou.ui.screen.scannerBISINDO
 
 /*
  * Copyright 2019 The TensorFlow Authors. All Rights Reserved.
