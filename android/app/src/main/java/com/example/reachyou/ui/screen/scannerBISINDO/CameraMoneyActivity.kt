@@ -82,58 +82,6 @@ abstract class CameraMoneyActivity : AppCompatActivity(), ImageReader.OnImageAva
         return rgbBytes
     }
 
-    /** Callback for android.hardware.Camera API  */
-    verride fun onImageAvailable(reader: ImageReader) {
-        // We need wait until we have some size from onPreviewSizeChosen
-        if (previewWidth == 0 || previewHeight == 0) {
-            return
-        }
-        if (rgbBytes == null) {
-            rgbBytes = IntArray(previewWidth * previewHeight)
-        }
-        try {
-            val image = reader.acquireLatestImage() ?: return
-
-            if (isProcessingFrame) {
-                image.close()
-                return
-            }
-            isProcessingFrame = true
-            Trace.beginSection("imageAvailable")
-            val planes = image.planes
-            fillBytes(planes, yuvBytes)
-            luminanceStride = planes[0].rowStride
-            val uvRowStride = planes[1].rowStride
-            val uvPixelStride = planes[1].pixelStride
-
-            imageConverter = Runnable {
-                ImageUtils.convertYUV420ToARGB8888(
-                    yuvBytes[0]!!,
-                    yuvBytes[1]!!,
-                    yuvBytes[2]!!,
-                    previewWidth,
-                    previewHeight,
-                    luminanceStride,
-                    uvRowStride,
-                    uvPixelStride,
-                    rgbBytes!!)
-            }
-
-            postInferenceCallback = Runnable {
-                image.close()
-                isProcessingFrame = false
-            }
-
-            processImage()
-        } catch (e: Exception) {
-            LOGGER.e(e, "Exception!")
-            Trace.endSection()
-            return
-        }
-
-        Trace.endSection()
-    }
-
     /** Callback for Camera2 API  */
     override fun onImageAvailable(reader: ImageReader) {
         // We need wait until we have some size from onPreviewSizeChosen
@@ -321,7 +269,7 @@ abstract class CameraMoneyActivity : AppCompatActivity(), ImageReader.OnImageAva
                     override fun onPreviewSizeChosen(size: Size, cameraRotation: Int) {
                         previewHeight = size.height
                         previewWidth = size.width
-                        this@CameraActivityBisindo.onPreviewSizeChosen(size, cameraRotation)
+                        this@CameraMoneyActivity.onPreviewSizeChosen(size, cameraRotation)
                     }
                 },
                 this,

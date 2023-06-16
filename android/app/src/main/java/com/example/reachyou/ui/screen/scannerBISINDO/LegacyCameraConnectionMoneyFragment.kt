@@ -85,10 +85,10 @@ class LegacyCameraConnectionMoneyFragment(
     private// No camera found
     val cameraId: Int
         get() {
-            val ci = CameraInfo()
+            val ci = Camera.CameraInfo()
             for (i in 0 until Camera.getNumberOfCameras()) {
                 Camera.getCameraInfo(i, ci)
-                if (ci.facing == CameraInfo.CAMERA_FACING_BACK) return i
+                if (ci.facing == Camera.CameraInfo.CAMERA_FACING_BACK) return i
             }
             return -1
         }

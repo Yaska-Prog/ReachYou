@@ -3,6 +3,7 @@ package com.example.reachyou.ui.screen.scannerBISINDO
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.ImageFormat
 import android.graphics.Matrix
@@ -226,20 +227,6 @@ class CameraMoneyConnectionFragment private constructor(
         try {
             if (!cameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                 throw RuntimeException("Time out waiting to lock camera opening.")
-            }
-            if (ActivityCompat.checkSelfPermission(
-                    requireActivity().applicationContext,
-                    Manifest.permission.CAMERA
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return
             }
             manager.openCamera(cameraId!!, stateCallback, backgroundHandler)
         } catch (e: CameraAccessException) {

@@ -129,7 +129,7 @@ class TFLiteBisindoDetectionAPIModel private constructor() : Classifier {
     }
 
     override fun setUseNNAPI(isChecked: Boolean) {
-//        if (tfLite != null) tfLite!!.setUseNNAPI(isChecked)
+//        if (tfLite != null) tflite!!.setuseNNAPI(isChecked)
     }
 
     companion object {

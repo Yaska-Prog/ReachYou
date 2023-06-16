@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Typeface
+import android.hardware.Camera
 import android.media.ImageReader.OnImageAvailableListener
 import android.os.SystemClock
 import android.util.Size
@@ -19,6 +20,7 @@ import com.example.reachyou.ui.screen.scannerBISINDO.env.BorderedText
 import com.example.reachyou.ui.screen.scannerBISINDO.env.ImageUtils
 import com.example.reachyou.ui.screen.scannerBISINDO.env.Logger
 import com.example.reachyou.ui.screen.scannerBISINDO.tflite.Classifier
+import com.example.reachyou.ui.screen.scannerBISINDO.tflite.TFLiteBisindoDetectionAPIModel
 import com.example.reachyou.ui.screen.scannerBISINDO.tflite.TFLiteMoneyDetectionAPIModel
 import com.example.reachyou.ui.screen.scannerBISINDO.tracking.MultiBoxTracker
 import java.io.IOException
@@ -76,7 +78,7 @@ class DetectorMoneyActivity : CameraMoneyActivity(), OnImageAvailableListener {
         var cropSize = TF_OD_API_INPUT_SIZE
 
         try {
-            detector = TFLiteBisindoDetectionAPIModel.create(
+            detector = TFLiteMoneyDetectionAPIModel.create(
                 assets,
                 TF_OD_API_MODEL_FILE,
                 TF_OD_API_LABELS_FILE,
@@ -196,6 +198,10 @@ class DetectorMoneyActivity : CameraMoneyActivity(), OnImageAvailableListener {
 
     override fun setUseNNAPI(isChecked: Boolean) {
         runInBackground(Runnable { detector!!.setUseNNAPI(isChecked) })
+    }
+
+    override fun onPreviewFrame(data: ByteArray?, camera: Camera?) {
+//        TODO("Not yet implemented")
     }
 
     override fun setNumThreads(numThreads: Int) {
