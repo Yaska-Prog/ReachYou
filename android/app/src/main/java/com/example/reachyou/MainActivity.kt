@@ -2,8 +2,10 @@ package com.example.reachyou
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,38 +24,9 @@ import java.util.concurrent.ExecutorService
 
 class MainActivity : ComponentActivity() {
     private lateinit var outputDirectory: File
-    private lateinit var cameraExecutor: ExecutorService
-
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            Log.i("kilo", "Permission granted")
-        } else {
-            Log.i("kilo", "Permission denied")
-        }
-    }
-
-    private fun requestCameraPermission() {
-        when {
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                Log.i("Permission", "Permission previously granted")
-            }
-
-            ActivityCompat.shouldShowRequestPermissionRationale(
-                this,
-                Manifest.permission.CAMERA
-            ) -> Log.i("Permission", "Show camera permissions dialog")
-
-            else -> requestPermissionLauncher.launch(Manifest.permission.CAMERA)
-        }
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        requestCameraPermission()
+        checkPermission()
         outputDirectory = getOutputDirectory()
         setContent {
             ReachYouTheme {
@@ -74,6 +47,34 @@ class MainActivity : ComponentActivity() {
 
         return if (mediaDir != null && mediaDir.exists()) mediaDir else filesDir
     }
+
+    private val requestMultiplePermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){resultMaps ->
+        var permisionGranted = false
+        resultMaps.forEach{
+            if(it.value == true){
+                permisionGranted = it.value
+            } else{
+                Toast.makeText(
+                    applicationContext, "Tidak mendapatkan permission, aplikasi akan dimatikan.", Toast.LENGTH_SHORT)
+                finish()
+            }
+        }
+
+    }
+    private var granted = false
+    private fun checkPermission(){
+        if(hasCameraPermission() == PERMISSION_GRANTED && hasFilePermission() == PERMISSION_GRANTED){
+            granted = true
+        }
+        else{
+            requestMultiplePermissionLauncher.launch(arrayOf(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA
+            ))
+        }
+    }
+    private fun hasCameraPermission() = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+    private fun hasFilePermission() = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
 }
 
 @Composable
