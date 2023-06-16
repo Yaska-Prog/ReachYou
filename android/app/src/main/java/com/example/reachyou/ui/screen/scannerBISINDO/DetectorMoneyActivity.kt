@@ -1,8 +1,11 @@
 package com.example.reachyou.ui.screen.scannerBISINDO
 
-import android.graphics.*
-import android.graphics.Bitmap.Config
-import android.graphics.Paint.Style
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Matrix
+import android.graphics.Paint
+import android.graphics.Typeface
 import android.media.ImageReader.OnImageAvailableListener
 import android.os.SystemClock
 import android.util.Size
@@ -16,10 +19,10 @@ import com.example.reachyou.ui.screen.scannerBISINDO.env.BorderedText
 import com.example.reachyou.ui.screen.scannerBISINDO.env.ImageUtils
 import com.example.reachyou.ui.screen.scannerBISINDO.env.Logger
 import com.example.reachyou.ui.screen.scannerBISINDO.tflite.Classifier
-import com.example.reachyou.ui.screen.scannerBISINDO.tflite.TFLiteBisindoDetectionAPIModel
+import com.example.reachyou.ui.screen.scannerBISINDO.tflite.TFLiteMoneyDetectionAPIModel
 import com.example.reachyou.ui.screen.scannerBISINDO.tracking.MultiBoxTracker
 import java.io.IOException
-import java.util.*
+import java.util.LinkedList
 
 /**
  * An activity that uses a TensorFlowMultiBoxDetector and ObjectTracker to detect and then track
@@ -57,14 +60,14 @@ class DetectorMoneyActivity : CameraMoneyActivity(), OnImageAvailableListener {
     private var borderedText: BorderedText? = null
 
     override val layoutId: Int
-        get() = R.layout.activity_camera_bisindo
+        get() = R.layout.camera_connection_fragment_tracking_bisindo
 
     override val desiredPreviewFrameSize: Size
         get() = DESIRED_PREVIEW_SIZE
 
     override fun onPreviewSizeChosen(size: Size, rotation: Int) {
         val textSizePx = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, TEXT_SIZE_DIP, resources.displayMetrics)
+            TypedValue.COMPLEX_UNIT_DIP, TEXT_SIZE_DIP, resources.displayMetrics)
         borderedText = BorderedText(textSizePx)
         borderedText!!.setTypeface(Typeface.MONOSPACE)
 
@@ -74,17 +77,17 @@ class DetectorMoneyActivity : CameraMoneyActivity(), OnImageAvailableListener {
 
         try {
             detector = TFLiteBisindoDetectionAPIModel.create(
-                    assets,
-                    TF_OD_API_MODEL_FILE,
-                    TF_OD_API_LABELS_FILE,
-                    TF_OD_API_INPUT_SIZE,
-                    TF_OD_API_IS_QUANTIZED)
+                assets,
+                TF_OD_API_MODEL_FILE,
+                TF_OD_API_LABELS_FILE,
+                TF_OD_API_INPUT_SIZE,
+                TF_OD_API_IS_QUANTIZED)
             cropSize = TF_OD_API_INPUT_SIZE
         } catch (e: IOException) {
             e.printStackTrace()
             LOGGER.e(e, "Exception initializing classifier!")
             val toast = Toast.makeText(
-                    applicationContext, "Classifier could not be initialized", Toast.LENGTH_SHORT)
+                applicationContext, "Classifier could not be initialized", Toast.LENGTH_SHORT)
             toast.show()
             finish()
         }
@@ -95,27 +98,27 @@ class DetectorMoneyActivity : CameraMoneyActivity(), OnImageAvailableListener {
 //        LOGGER.i("Camera orientation relative to screen canvas: %d", sensorOrientation.toString())
 
         LOGGER.i("Initializing at size %dx%d", previewWidth, previewHeight)
-        rgbFrameBitmap = Bitmap.createBitmap(previewWidth, previewHeight, Config.ARGB_8888)
-        croppedBitmap = Bitmap.createBitmap(cropSize, cropSize, Config.ARGB_8888)
+        rgbFrameBitmap = Bitmap.createBitmap(previewWidth, previewHeight, Bitmap.Config.ARGB_8888)
+        croppedBitmap = Bitmap.createBitmap(cropSize, cropSize, Bitmap.Config.ARGB_8888)
 
         frameToCropTransform = ImageUtils.getTransformationMatrix(
-                previewWidth, previewHeight,
-                cropSize, cropSize,
-                sensorOrientation!!, MAINTAIN_ASPECT)
+            previewWidth, previewHeight,
+            cropSize, cropSize,
+            sensorOrientation!!, MAINTAIN_ASPECT)
 
         cropToFrameTransform = Matrix()
         frameToCropTransform!!.invert(cropToFrameTransform)
 
         trackingOverlay = findViewById<View>(R.id.tracking_overlay) as OverlayView
         trackingOverlay.addCallback(
-                object : OverlayView.DrawCallback {
-                    override fun drawCallback(canvas: Canvas) {
-                        tracker!!.draw(canvas)
-                        if (isDebug) {
-                            tracker!!.drawDebug(canvas)
-                        }
+            object : OverlayView.DrawCallback {
+                override fun drawCallback(canvas: Canvas) {
+                    tracker!!.draw(canvas)
+                    if (isDebug) {
+                        tracker!!.drawDebug(canvas)
                     }
-                })
+                }
+            })
 
         tracker!!.setFrameConfiguration(previewWidth, previewHeight, sensorOrientation!!)
     }
@@ -145,44 +148,44 @@ class DetectorMoneyActivity : CameraMoneyActivity(), OnImageAvailableListener {
         }
 
         runInBackground(
-                Runnable {
-                    LOGGER.i("Running detection on image $currTimestamp")
-                    val startTime = SystemClock.uptimeMillis()
-                    val results = detector!!.recognizeImage(croppedBitmap!!)
-                    lastProcessingTimeMs = SystemClock.uptimeMillis() - startTime
+            Runnable {
+                LOGGER.i("Running detection on image $currTimestamp")
+                val startTime = SystemClock.uptimeMillis()
+                val results = detector!!.recognizeImage(croppedBitmap!!)
+                lastProcessingTimeMs = SystemClock.uptimeMillis() - startTime
 
-                    cropCopyBitmap = Bitmap.createBitmap(croppedBitmap!!)
-                    val canvas = Canvas(cropCopyBitmap!!)
-                    val paint = Paint()
-                    paint.color = Color.RED
-                    paint.style = Style.STROKE
-                    paint.strokeWidth = 2.0f
+                cropCopyBitmap = Bitmap.createBitmap(croppedBitmap!!)
+                val canvas = Canvas(cropCopyBitmap!!)
+                val paint = Paint()
+                paint.color = Color.RED
+                paint.style = Paint.Style.STROKE
+                paint.strokeWidth = 2.0f
 
-                    var minimumConfidence = MINIMUM_CONFIDENCE_TF_OD_API
-                    when (MODE) {
-                        DetectorMode.TF_OD_API -> minimumConfidence = MINIMUM_CONFIDENCE_TF_OD_API
+                var minimumConfidence = MINIMUM_CONFIDENCE_TF_OD_API
+                when (MODE) {
+                    DetectorMode.TF_OD_API -> minimumConfidence = MINIMUM_CONFIDENCE_TF_OD_API
+                }
+
+                val mappedRecognitions = LinkedList<Classifier.Recognition>()
+
+                for (result in results) {
+                    val location = result.location
+                    if (location != null && result.confidence >= minimumConfidence) {
+                        canvas.drawRect(location, paint)
+
+                        cropToFrameTransform!!.mapRect(location)
+
+                        result.location = location
+                        mappedRecognitions.add(result)
                     }
+                }
 
-                    val mappedRecognitions = LinkedList<Classifier.Recognition>()
+                tracker!!.trackResults(mappedRecognitions, currTimestamp)
+                trackingOverlay.postInvalidate()
 
-                    for (result in results) {
-                        val location = result.location
-                        if (location != null && result.confidence >= minimumConfidence) {
-                            canvas.drawRect(location, paint)
+                computingDetection = false
 
-                            cropToFrameTransform!!.mapRect(location)
-
-                            result.location = location
-                            mappedRecognitions.add(result)
-                        }
-                    }
-
-                    tracker!!.trackResults(mappedRecognitions, currTimestamp)
-                    trackingOverlay.postInvalidate()
-
-                    computingDetection = false
-
-                })
+            })
     }
 
     // Which detection model to use: by default uses Tensorflow Object Detection API frozen
@@ -203,10 +206,10 @@ class DetectorMoneyActivity : CameraMoneyActivity(), OnImageAvailableListener {
         private val LOGGER = Logger()
 
         // Configuration values for the prepackaged SSD model.
-        private val TF_OD_API_INPUT_SIZE = 448
+        private val TF_OD_API_INPUT_SIZE = 640
         private val TF_OD_API_IS_QUANTIZED = true
-        private val TF_OD_API_MODEL_FILE = "converted_model.tflite"
-        private val TF_OD_API_LABELS_FILE = "file:///android_asset/labels.txt"
+        private val TF_OD_API_MODEL_FILE = "Bisindo1.tflite"
+        private val TF_OD_API_LABELS_FILE = "file:///android_asset/labelHuruf.txt"
         private val MODE = DetectorMode.TF_OD_API
         // Minimum detection confidence to track a detection.
         private val MINIMUM_CONFIDENCE_TF_OD_API = 0.5f

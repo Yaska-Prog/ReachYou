@@ -7,26 +7,31 @@ import android.hardware.Camera
 import android.hardware.camera2.CameraAccessException
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
-import android.media.Image.Plane
+import android.media.Image
 import android.media.ImageReader
-import android.media.ImageReader.OnImageAvailableListener
-import android.os.*
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
+import android.os.Bundle
+import android.os.Handler
+import android.os.HandlerThread
+import android.os.Trace
+import android.util.Log
 import android.util.Size
 import android.view.Surface
 import android.view.View
 import android.view.WindowManager
 import android.widget.CompoundButton
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.example.reachyou.R
 import com.example.reachyou.ui.screen.scannerBISINDO.env.ImageUtils
 import com.example.reachyou.ui.screen.scannerBISINDO.env.Logger
 
-abstract class CameraMoneyActivity : AppCompatActivity(), OnImageAvailableListener,
+abstract class CameraMoneyActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener,
         Camera.PreviewCallback, CompoundButton.OnCheckedChangeListener, View.OnClickListener,
         CameraMoneyConnectionFragment.ConnectionCallback {
+
     protected var previewWidth = 0
     protected var previewHeight = 0
     val isDebug = false
@@ -65,10 +70,10 @@ abstract class CameraMoneyActivity : AppCompatActivity(), OnImageAvailableListen
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
 
-        if (hasPermission()) {
+        if (true) {
             setFragment()
         } else {
-            requestPermission()
+            Log.d("no Permission", "No Permission granted")
         }
     }
 
@@ -78,37 +83,55 @@ abstract class CameraMoneyActivity : AppCompatActivity(), OnImageAvailableListen
     }
 
     /** Callback for android.hardware.Camera API  */
-    override fun onPreviewFrame(bytes: ByteArray, camera: Camera) {
-        if (isProcessingFrame) {
-            LOGGER.w("Dropping frame!")
+    verride fun onImageAvailable(reader: ImageReader) {
+        // We need wait until we have some size from onPreviewSizeChosen
+        if (previewWidth == 0 || previewHeight == 0) {
             return
         }
-
+        if (rgbBytes == null) {
+            rgbBytes = IntArray(previewWidth * previewHeight)
+        }
         try {
-            // Initialize the storage bitmaps once when the resolution is known.
-            if (rgbBytes == null) {
-                val previewSize = camera.parameters.previewSize
-                previewHeight = previewSize.height
-                previewWidth = previewSize.width
-                rgbBytes = IntArray(previewWidth * previewHeight)
-                onPreviewSizeChosen(Size(previewSize.width, previewSize.height), 90)
+            val image = reader.acquireLatestImage() ?: return
+
+            if (isProcessingFrame) {
+                image.close()
+                return
             }
+            isProcessingFrame = true
+            Trace.beginSection("imageAvailable")
+            val planes = image.planes
+            fillBytes(planes, yuvBytes)
+            luminanceStride = planes[0].rowStride
+            val uvRowStride = planes[1].rowStride
+            val uvPixelStride = planes[1].pixelStride
+
+            imageConverter = Runnable {
+                ImageUtils.convertYUV420ToARGB8888(
+                    yuvBytes[0]!!,
+                    yuvBytes[1]!!,
+                    yuvBytes[2]!!,
+                    previewWidth,
+                    previewHeight,
+                    luminanceStride,
+                    uvRowStride,
+                    uvPixelStride,
+                    rgbBytes!!)
+            }
+
+            postInferenceCallback = Runnable {
+                image.close()
+                isProcessingFrame = false
+            }
+
+            processImage()
         } catch (e: Exception) {
             LOGGER.e(e, "Exception!")
+            Trace.endSection()
             return
         }
 
-        isProcessingFrame = true
-        yuvBytes[0] = bytes
-        luminanceStride = previewWidth
-
-        imageConverter = Runnable { ImageUtils.convertYUV420SPToARGB8888(bytes, previewWidth, previewHeight, rgbBytes!!) }
-
-        postInferenceCallback = Runnable {
-            camera.addCallbackBuffer(bytes)
-            isProcessingFrame = false
-        }
-        processImage()
+        Trace.endSection()
     }
 
     /** Callback for Camera2 API  */
@@ -214,45 +237,45 @@ abstract class CameraMoneyActivity : AppCompatActivity(), OnImageAvailableListen
         }
     }
 
-    override fun onRequestPermissionsResult(
-            requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSIONS_REQUEST) {
-            if (grantResults.size > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                setFragment()
-            } else {
-                requestPermission()
-            }
-        }
-    }
-
-    private fun hasPermission(): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkSelfPermission(PERMISSION_CAMERA) == PackageManager.PERMISSION_GRANTED
-                    && checkSelfPermission(PERMISSION_STORAGE) == PackageManager.PERMISSION_GRANTED
-        } else {
-            true
-        }
-    }
-
-    private fun requestPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (shouldShowRequestPermissionRationale(PERMISSION_CAMERA)) {
-                Toast.makeText(
-                        this@CameraMoneyActivity,
-                        "Camera permission is required for this demo",
-                        Toast.LENGTH_LONG)
-                        .show()
-            }
-            requestPermissions(arrayOf(PERMISSION_CAMERA, PERMISSION_STORAGE), PERMISSIONS_REQUEST)
-        }
-    }
+//    override fun onRequestPermissionsResult(
+//            requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//        if (requestCode == PERMISSIONS_REQUEST) {
+//            if (grantResults.size > 0
+//                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
+//                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+//                setFragment()
+//            } else {
+//                requestPermission()
+//            }
+//        }
+//    }
+//
+//    private fun hasPermission(): Boolean {
+//        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            checkSelfPermission(PERMISSION_CAMERA) == PackageManager.PERMISSION_GRANTED
+//                    && checkSelfPermission(PERMISSION_STORAGE) == PackageManager.PERMISSION_GRANTED
+//        } else {
+//            true
+//        }
+//    }
+//
+//    private fun requestPermission() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            if (shouldShowRequestPermissionRationale(PERMISSION_CAMERA)) {
+//                Toast.makeText(
+//                        this@CameraMoneyActivity,
+//                        "Camera permission is required for this demo",
+//                        Toast.LENGTH_LONG)
+//                        .show()
+//            }
+//            requestPermissions(arrayOf(PERMISSION_CAMERA, PERMISSION_STORAGE), PERMISSIONS_REQUEST)
+//        }
+//    }
 
     // Returns true if the device supports the required hardware level, or better.
     private fun isHardwareLevelSupported(
-            characteristics: CameraCharacteristics, requiredLevel: Int): Boolean {
+        characteristics: CameraCharacteristics, requiredLevel: Int): Boolean {
         val deviceLevel = characteristics.get(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL)!!
         return if (deviceLevel == CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY) {
             requiredLevel == deviceLevel
@@ -293,30 +316,30 @@ abstract class CameraMoneyActivity : AppCompatActivity(), OnImageAvailableListen
         val fragment: Fragment
         if (useCamera2API) {
 
-            val camera2Fragment = CameraMoneyConnectionFragment.newInstance(
-                    object : CameraMoneyConnectionFragment.ConnectionCallback {
-                        override fun onPreviewSizeChosen(size: Size, cameraRotation: Int) {
-                            previewHeight = size.height
-                            previewWidth = size.width
-                            this@CameraMoneyActivity.onPreviewSizeChosen(size, cameraRotation)
-                        }
-                    },
-                    this,
-                    layoutId,
-                    desiredPreviewFrameSize)
+            val camera2Fragment = CameraConnectionFragmentBisindo.newInstance(
+                object : CameraConnectionFragmentBisindo.ConnectionCallback {
+                    override fun onPreviewSizeChosen(size: Size, cameraRotation: Int) {
+                        previewHeight = size.height
+                        previewWidth = size.width
+                        this@CameraActivityBisindo.onPreviewSizeChosen(size, cameraRotation)
+                    }
+                },
+                this,
+                layoutId,
+                desiredPreviewFrameSize)
 
             if (cameraId != null) {
                 camera2Fragment.setCamera(cameraId)
             }
             fragment = camera2Fragment
         } else {
-            fragment = LegacyCameraConnectionMoneyFragment(this, layoutId, desiredPreviewFrameSize)
+            fragment = LegacyCameraConnectionFragmentBisindo(this, layoutId, desiredPreviewFrameSize)
         }
 
         supportFragmentManager.beginTransaction().replace(R.id.container, fragment).commit()
     }
 
-    protected fun fillBytes(planes: Array<Plane>, yuvBytes: Array<ByteArray?>) {
+    protected fun fillBytes(planes: Array<Image.Plane>, yuvBytes: Array<ByteArray?>) {
         // Because of the variable row stride it's not possible to know in
         // advance the actual necessary dimensions of the yuv planes.
         for (i in planes.indices) {

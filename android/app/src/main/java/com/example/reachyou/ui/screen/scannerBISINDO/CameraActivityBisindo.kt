@@ -77,11 +77,11 @@ abstract class CameraActivityBisindo : AppCompatActivity(), ImageReader.OnImageA
 //            requestPermission()
 //        }
 
-        if (true) {
+        `if (true) {
             setFragment()
         } else {
             Log.d("no Permission", "No Permission granted")
-        }
+        }`
     }
 
     protected fun getRgbBytes(): IntArray? {
