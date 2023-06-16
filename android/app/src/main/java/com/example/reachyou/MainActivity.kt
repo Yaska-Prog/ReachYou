@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestCameraPermission()
+//        requestCameraPermission()
         outputDirectory = getOutputDirectory()
         setContent {
             ReachYouTheme {

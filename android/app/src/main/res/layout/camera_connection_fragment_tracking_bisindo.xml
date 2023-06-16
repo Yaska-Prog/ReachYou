@@ -17,12 +17,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.tflite.objectdetection.customview.AutoFitTextureView
+    <com.example.reachyou.ui.screen.scannerBISINDO.customView.AutoFitTextureView
         android:id="@+id/texture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <com.google.tflite.objectdetection.customview.OverlayView
+    <com.example.reachyou.ui.screen.scannerBISINDO.customView.OverlayView
         android:id="@+id/tracking_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Trace
+import android.util.Log
 import android.util.Size
 import android.view.Surface
 import android.view.View
@@ -70,10 +71,16 @@ abstract class CameraActivityBisindo : AppCompatActivity(), ImageReader.OnImageA
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
 
-        if (hasPermission()) {
+//        if (hasPermission()) {
+//            setFragment()
+//        } else {
+//            requestPermission()
+//        }
+
+        if (true) {
             setFragment()
         } else {
-            requestPermission()
+            Log.d("no Permission", "No Permission granted")
         }
     }
 
@@ -219,40 +226,40 @@ abstract class CameraActivityBisindo : AppCompatActivity(), ImageReader.OnImageA
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        if (requestCode == PERMISSIONS_REQUEST) {
-            if (grantResults.size > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                setFragment()
-            } else {
-                requestPermission()
-            }
-        }
-    }
-
-    private fun hasPermission(): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkSelfPermission(PERMISSION_CAMERA) == PackageManager.PERMISSION_GRANTED
-                    && checkSelfPermission(PERMISSION_STORAGE) == PackageManager.PERMISSION_GRANTED
-        } else {
-            true
-        }
-    }
-
-    private fun requestPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (shouldShowRequestPermissionRationale(PERMISSION_CAMERA)) {
-                Toast.makeText(
-                    this@CameraActivityBisindo,
-                    "Camera permission is required for this demo",
-                    Toast.LENGTH_LONG)
-                    .show()
-            }
-            requestPermissions(arrayOf(PERMISSION_CAMERA, PERMISSION_STORAGE), PERMISSIONS_REQUEST)
-        }
-    }
+//    override fun onRequestPermissionsResult(
+//        requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+//        if (requestCode == PERMISSIONS_REQUEST) {
+//            if (grantResults.size > 0
+//                && grantResults[0] == PackageManager.PERMISSION_GRANTED
+//                && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+//                setFragment()
+//            } else {
+//                requestPermission()
+//            }
+//        }
+//    }
+//
+//    private fun hasPermission(): Boolean {
+//        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            checkSelfPermission(PERMISSION_CAMERA) == PackageManager.PERMISSION_GRANTED
+//                    && checkSelfPermission(PERMISSION_STORAGE) == PackageManager.PERMISSION_GRANTED
+//        } else {
+//            true
+//        }
+//    }
+//
+//    private fun requestPermission() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            if (shouldShowRequestPermissionRationale(PERMISSION_CAMERA)) {
+//                Toast.makeText(
+//                    this@CameraActivityBisindo,
+//                    "Camera permission is required for this demo",
+//                    Toast.LENGTH_LONG)
+//                    .show()
+//            }
+//            requestPermissions(arrayOf(PERMISSION_CAMERA, PERMISSION_STORAGE), PERMISSIONS_REQUEST)
+//        }
+//    }
 
     // Returns true if the device supports the required hardware level, or better.
     private fun isHardwareLevelSupported(
