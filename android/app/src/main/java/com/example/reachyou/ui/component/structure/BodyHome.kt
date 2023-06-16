@@ -14,6 +14,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -22,6 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.reachyou.R
 import com.example.reachyou.model.ItemHome
+import com.example.reachyou.ui.component.utils.CustomDialogQuiz
+import com.example.reachyou.ui.component.utils.MainCustomDialog
 import com.example.reachyou.ui.theme.ReachYouTheme
 
 @Composable
@@ -31,11 +37,31 @@ fun BodyHome(
     navigateToBisindo: () -> Unit,
     navigateToMoney: () -> Unit
 ) {
+    var isDialogShown by rememberSaveable {
+        mutableStateOf(false)
+    }
+    if(isDialogShown){
+        CustomDialogQuiz(
+            title = "Under Maintenance",
+            subtitle = "Maaf, fitur ini dalam pengembangan",
+            onDismiss = {
+                        isDialogShown = false
+            },
+            onConfirm = {
+                isDialogShown = false
+            },
+            isSuccess = false
+        )
+    }
     val listItem = listOf<ItemHome>(
         ItemHome(icon = ImageVector.vectorResource(id = R.drawable.hand_twofinger), "BISINDO", "Penerjemah BISINDO", 0, navigateToBisindo),
-        ItemHome(icon = ImageVector.vectorResource(id = R.drawable.color_lens), "Warna", "Fitur Pendeteksi Warna", 1, navigateToBisindo),
+        ItemHome(icon = ImageVector.vectorResource(id = R.drawable.color_lens), "Warna", "Fitur Pendeteksi Warna", 1) {
+            isDialogShown = true
+        },
         ItemHome(icon = ImageVector.vectorResource(id = R.drawable.uang), "Uang", "Pendeteksi Mata Uang", 2, navigateToMoney),
-        ItemHome(icon = ImageVector.vectorResource(id = R.drawable.emoji_objects), "Objek", "Pendeteksi Objek benda", 3, navigateToBisindo)
+        ItemHome(icon = ImageVector.vectorResource(id = R.drawable.emoji_objects), "Objek", "Pendeteksi Objek benda", 3) {
+            isDialogShown = true
+        }
     )
     Column(
         modifier = modifier.padding(20.dp)
@@ -77,7 +103,7 @@ fun ItemHomeUI(
             .padding(10.dp)
             .background(color = Color.White)
             .clickable {
-                       navigateToScanner()
+                navigateToScanner()
             },
     ) {
         Row(modifier = modifier.padding(top = 15.dp, bottom = 15.dp)) {

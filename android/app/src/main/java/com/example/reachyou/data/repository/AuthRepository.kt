@@ -41,7 +41,7 @@ class AuthRepository(private val apiService: ApiService, private val sharedPrefe
                 emit(UiState.Success(responseBody.msg))
             }
             else{
-                emit(UiState.Error("Gagal melakukan register! Email sudah digunakan"))
+                emit(UiState.Error("Gagal melakukan register! Pesan kesalahan: ${client.message()}"))
             }
         }
         catch (e: Exception){
