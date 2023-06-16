@@ -65,7 +65,7 @@ abstract class CameraMoneyActivity : AppCompatActivity(), ImageReader.OnImageAva
         super.onCreate(null)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        setContentView(R.layout.activity_camera_bisindo)
+        setContentView(R.layout.activity_camera_money)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
@@ -316,8 +316,8 @@ abstract class CameraMoneyActivity : AppCompatActivity(), ImageReader.OnImageAva
         val fragment: Fragment
         if (useCamera2API) {
 
-            val camera2Fragment = CameraConnectionFragmentBisindo.newInstance(
-                object : CameraConnectionFragmentBisindo.ConnectionCallback {
+            val camera2Fragment = CameraMoneyConnectionFragment.newInstance(
+                object : CameraMoneyConnectionFragment.ConnectionCallback {
                     override fun onPreviewSizeChosen(size: Size, cameraRotation: Int) {
                         previewHeight = size.height
                         previewWidth = size.width
@@ -333,7 +333,7 @@ abstract class CameraMoneyActivity : AppCompatActivity(), ImageReader.OnImageAva
             }
             fragment = camera2Fragment
         } else {
-            fragment = LegacyCameraConnectionFragmentBisindo(this, layoutId, desiredPreviewFrameSize)
+            fragment = LegacyCameraConnectionMoneyFragment(this, layoutId, desiredPreviewFrameSize)
         }
 
         supportFragmentManager.beginTransaction().replace(R.id.container, fragment).commit()

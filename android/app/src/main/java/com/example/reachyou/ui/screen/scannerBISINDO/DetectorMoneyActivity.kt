@@ -208,8 +208,8 @@ class DetectorMoneyActivity : CameraMoneyActivity(), OnImageAvailableListener {
         // Configuration values for the prepackaged SSD model.
         private val TF_OD_API_INPUT_SIZE = 640
         private val TF_OD_API_IS_QUANTIZED = true
-        private val TF_OD_API_MODEL_FILE = "Bisindo1.tflite"
-        private val TF_OD_API_LABELS_FILE = "file:///android_asset/labelHuruf.txt"
+        private val TF_OD_API_MODEL_FILE = "detect.tflite"
+        private val TF_OD_API_LABELS_FILE = "file:///android_asset/labelmap.txt"
         private val MODE = DetectorMode.TF_OD_API
         // Minimum detection confidence to track a detection.
         private val MINIMUM_CONFIDENCE_TF_OD_API = 0.5f
