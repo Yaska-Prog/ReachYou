@@ -29,6 +29,14 @@
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:exported="false" />
         <activity
+            android:name=".ui.screen.scannerBISINDO.DetectorMoneyActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:exported="false" />
+        <activity
+            android:name=".ui.screen.scannerBISINDO.CameraMoneyActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
