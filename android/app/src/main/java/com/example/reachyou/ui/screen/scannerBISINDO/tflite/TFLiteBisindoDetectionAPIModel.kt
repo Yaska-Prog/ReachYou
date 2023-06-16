@@ -129,7 +129,7 @@ class TFLiteBisindoDetectionAPIModel private constructor() : Classifier {
     }
 
     override fun setUseNNAPI(isChecked: Boolean) {
-        if (tfLite != null) tfLite!!.setUseNNAPI(isChecked)
+//        if (tfLite != null) tfLite!!.setUseNNAPI(isChecked)
     }
 
     companion object {
@@ -186,7 +186,7 @@ class TFLiteBisindoDetectionAPIModel private constructor() : Classifier {
             try {
                 val options = Interpreter.Options()
                 options.setNumThreads(4)
-                options.setUseNNAPI(false)
+//                options.setUseNNAPI(false)
                 d.tfLite = Interpreter(loadModelFile(assetManager, modelFilename), options)
             } catch (e: Exception) {
                 throw RuntimeException(e)

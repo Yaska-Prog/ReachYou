@@ -57,7 +57,7 @@ import com.example.reachyou.ui.screen.scannerBISINDO.CameraActivityBisindo
 import com.example.reachyou.ui.screen.scannerBISINDO.DetectorActivityBisindo
 import com.example.reachyou.ui.screen.scannerBISINDO.ScannerBISINDOScreen
 import com.example.reachyou.ui.screen.setupProfile.SetupProfileScreen
-import com.google.tflite.objectdetection.DetectorMoneyActivity
+import com.example.reachyou.ui.screen.scannerBISINDO.DetectorMoneyActivity
 import kotlinx.coroutines.launch
 import java.io.File
 
