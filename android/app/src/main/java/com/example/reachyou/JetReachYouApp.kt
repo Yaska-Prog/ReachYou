@@ -55,9 +55,9 @@ import com.example.reachyou.ui.screen.profile.ProfileScreen
 import com.example.reachyou.ui.screen.register.RegisterScreen
 import com.example.reachyou.ui.screen.scannerBISINDO.CameraActivityBisindo
 import com.example.reachyou.ui.screen.scannerBISINDO.DetectorActivityBisindo
+import com.example.reachyou.ui.screen.scannerBISINDO.DetectorMoneyActivity
 import com.example.reachyou.ui.screen.scannerBISINDO.ScannerBISINDOScreen
 import com.example.reachyou.ui.screen.setupProfile.SetupProfileScreen
-import com.example.reachyou.ui.screen.scannerBISINDO.DetectorMoneyActivity
 import kotlinx.coroutines.launch
 import java.io.File
 
